@@ -15,32 +15,32 @@ add_definitions (-DDATADIR=\"${CMAKE_CURRENT_BINARY_DIR}/data/\")
 add_definitions (-DBINDIR=\"${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/\")
 
 # Add the test interface library.
-if (NOT TARGET ${PROJECT_NAME}_test)
-    add_library (${PROJECT_NAME}_test INTERFACE)
-    target_link_libraries (${PROJECT_NAME}_test INTERFACE GTest::gtest_main ${PROJECT_NAME}_lib)
-    add_library (${PROJECT_NAME}::test ALIAS ${PROJECT_NAME}_test)
+if (NOT TARGET gcb20265_test)
+    add_library (gcb20265_test INTERFACE)
+    target_link_libraries (gcb20265_test INTERFACE GTest::gtest_main gcb20265_lib)
+    add_library (gcb20265::test ALIAS gcb20265_test)
 endif ()
 
 # Add the check target that builds and runs tests.
 add_custom_target (check COMMAND ${CMAKE_CTEST_COMMAND} ${CMAKE_CTEST_ARGUMENTS})
 
-get_directory_property (${PROJECT_NAME}_targets DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/src" BUILDSYSTEM_TARGETS)
-foreach (target IN LISTS ${PROJECT_NAME}_targets)
+get_directory_property (gcb20265_targets DIRECTORY "${gcb20265_SOURCE_DIR}/src" BUILDSYSTEM_TARGETS)
+foreach (target IN LISTS gcb20265_targets)
     get_target_property (type ${target} TYPE)
     if (type STREQUAL "EXECUTABLE")
-        list (APPEND ${PROJECT_NAME}_EXECUTABLE_LIST ${target})
+        list (APPEND gcb20265_EXECUTABLE_LIST ${target})
     endif ()
 endforeach ()
-unset (${PROJECT_NAME}_targets)
+unset (gcb20265_targets)
 
 macro (add_app_test test_filename)
-    file (RELATIVE_PATH source_file "${${PROJECT_NAME}_SOURCE_DIR}" "${CMAKE_CURRENT_LIST_DIR}/${test_filename}")
+    file (RELATIVE_PATH source_file "${gcb20265_SOURCE_DIR}" "${CMAKE_CURRENT_LIST_DIR}/${test_filename}")
     get_filename_component (target "${source_file}" NAME_WE)
 
     add_executable (${target} ${test_filename})
-    target_link_libraries (${target} ${PROJECT_NAME}::test)
+    target_link_libraries (${target} gcb20265::test)
 
-    add_dependencies (${target} ${${PROJECT_NAME}_EXECUTABLE_LIST})
+    add_dependencies (${target} ${gcb20265_EXECUTABLE_LIST})
     add_dependencies (check ${target})
 
     add_test (NAME ${target} COMMAND ${target})
