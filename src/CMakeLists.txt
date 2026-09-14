@@ -34,5 +34,11 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif ()
 
 # Add the application.
-add_executable (gcb20265 main.cpp)
-target_link_libraries (gcb20265 PRIVATE gcb20265_lib)
+add_executable (solution_task1 solution_task1.cpp)
+target_link_libraries (solution_task1 PRIVATE gcb20265_lib)
+
+add_executable (solution_task1 solution_task1.cpp)
+target_link_libraries (solution_task1 PRIVATE gcb20265_lib)
+
+add_executable (solution_task1 solution_task1.cpp)
+target_link_libraries (solution_task1 PRIVATE gcb20265_lib)
