@@ -6,30 +6,29 @@ cmake_minimum_required (VERSION 3.25)
 
 # An object library (without main) to be used in multiple targets.
 # You can add more external include paths of other projects that are needed for your project.
-add_library (gcb20265_lib STATIC fastq_conversion.cpp)
-target_include_directories (gcb20265_lib PUBLIC "${gcb20265_SOURCE_DIR}/include")
-target_link_libraries (gcb20265_lib PUBLIC seqan3::seqan3 sharg::sharg seqan::hibf
-                                                    fmindex-collection::fmindex-collection
+add_library (gcb20265_lib INTERFACE)
+target_include_directories (gcb20265_lib INTERFACE "${gcb20265_SOURCE_DIR}/include")
+target_link_libraries (gcb20265_lib INTERFACE seqan3::seqan3 sharg::sharg seqan::hibf
 )
 
-target_compile_options (gcb20265_lib PUBLIC "-pedantic" "-Wall" "-Wextra")
+target_compile_options (gcb20265_lib INTERFACE "-pedantic" "-Wall" "-Wextra")
 
 option (gcb20265_WITH_WERROR "Report compiler warnings as errors." ON)
 
 if (gcb20265_WITH_WERROR)
-    target_compile_options (gcb20265_lib PUBLIC "-Werror")
+    target_compile_options (gcb20265_lib INTERFACE "-Werror")
     message (STATUS "Building tests with -Werror.")
 endif ()
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # Disable warning about std::hardware_destructive_interference_size not being ABI-stable.
     if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 12)
-        target_compile_options (gcb20265_lib PUBLIC "-Wno-interference-size")
+        target_compile_options (gcb20265_lib INTERFACE "-Wno-interference-size")
     endif ()
 
     # Warn about failed return value optimization.
     if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 14)
-        target_compile_options (gcb20265_lib PUBLIC "-Wnrvo")
+        target_compile_options (gcb20265_lib INTERFACE "-Wnrvo")
     endif ()
 endif ()
 
@@ -37,8 +36,8 @@ endif ()
 add_executable (solution_task1 solution_task1.cpp)
 target_link_libraries (solution_task1 PRIVATE gcb20265_lib)
 
-add_executable (solution_task1 solution_task1.cpp)
-target_link_libraries (solution_task1 PRIVATE gcb20265_lib)
+add_executable (solution_task2 solution_task2.cpp)
+target_link_libraries (solution_task2 PRIVATE gcb20265_lib)
 
-add_executable (solution_task1 solution_task1.cpp)
-target_link_libraries (solution_task1 PRIVATE gcb20265_lib)
+add_executable (solution_task3 solution_task3.cpp)
+target_link_libraries (solution_task3 PRIVATE gcb20265_lib)
