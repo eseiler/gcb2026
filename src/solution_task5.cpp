@@ -3,14 +3,17 @@
 #include <fstream>    // for fstream
 #include <filesystem> // for std::filesystem(::path)
 
-#include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
-
 #include <cereal/archives/binary.hpp> // for BinaryOutputArchive
 #include <cereal/types/vector.hpp> // IWYU pragma: keep
-#include <hibf/cereal/path.hpp> // IWYU pragma: keep
 
+#include <hibf/cereal/path.hpp> // IWYU pragma: keep
 #include <hibf/config.hpp>                                // for config, insert_iterator
 #include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
+
+#include <seqan3/io/sequence_file/input.hpp>
+#include <seqan3/search/views/kmer_hash.hpp>
+
+#include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
 
 // Build a Hierarchical Interleaved Bloom Filter (HIBF) on the Paper Data
 int main(int argc, char const * argv[])
@@ -20,12 +23,13 @@ int main(int argc, char const * argv[])
     // The input lambda
     auto file_data = [&](size_t const user_bin_id, seqan::hibf::insert_iterator it)
     {
-        std::fstream file{args.filenames[user_bin_id]};
+        seqan3::sequence_file_input file{args.filenames[user_bin_id]};
 
-        std::string word;
-
-        while (file >> word)
-            it = std::hash<std::string>{}(word);
+        for (auto && record : file)
+        {
+            for (uint64_t hash : record.sequence() | seqan3::views::kmer_hash(seqan3::ungapped{20}))
+                it = hash;
+        }
     };
 
     seqan::hibf::config config{.input_fn = file_data, // required

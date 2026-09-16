@@ -3,7 +3,7 @@
 #include <fstream>    // for fstream
 #include <filesystem> // for std::filesystem(::path)
 
-#include <chopper/parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
+#include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
 
 int main(int argc, char const * argv[])
 {
@@ -16,12 +16,6 @@ int main(int argc, char const * argv[])
     for (std::filesystem::path filename : args.filenames)
     {
         std::fstream file{filename};
-
-        if (!file.is_open())
-        {
-            std::cout << "Could not open file\n";
-            return 1;
-        }
 
         std::string word;
         unsigned counter{0};

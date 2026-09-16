@@ -3,7 +3,7 @@
 #include <fstream>    // for fstream
 #include <filesystem> // for std::filesystem(::path)
 
-#include <chopper/parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
+#include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
 
 #include <cereal/archives/binary.hpp> // for BinaryOutputArchive
 #include <cereal/types/vector.hpp> // IWYU pragma: keep

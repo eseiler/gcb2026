@@ -41,3 +41,12 @@ target_link_libraries (solution_task2 PRIVATE gcb20265_lib)
 
 add_executable (solution_task3 solution_task3.cpp)
 target_link_libraries (solution_task3 PRIVATE gcb20265_lib)
+
+add_executable (solution_task4 solution_task4.cpp)
+target_link_libraries (solution_task4 PRIVATE gcb20265_lib)
+
+add_executable (solution_task5 solution_task5.cpp)
+target_link_libraries (solution_task5 PRIVATE gcb20265_lib)
+
+add_executable (solution_task6 solution_task6.cpp)
+target_link_libraries (solution_task6 PRIVATE gcb20265_lib)
