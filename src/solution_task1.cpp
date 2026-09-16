@@ -2,10 +2,7 @@
 // SPDX-FileCopyrightText: 2016-2025 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>   // for std::cout
-#include <string>     // for std::string
-#include <fstream>    // for fstream
-#include <filesystem> // for std::filesystem(::path)
+import std;
 
 #include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
 

@@ -59,8 +59,8 @@ another language:
 ```sh
 mkdir build && cd build
 cmake ..
-make task1   # build a single task, once you've added it (see below)
-make check   # or: build every task currently defined in src/CMakeLists.txt
+ninja task1   # build a single task, once you've added it (see below)
+ninja check   # or: build every task currently defined in src/CMakeLists.txt
 ```
 
 Executables land directly in `build/`, so once built you run them as:

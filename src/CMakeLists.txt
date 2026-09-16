@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2016-2025 Knut Reinert & MPI für molekulare Genetik
 # SPDX-License-Identifier: CC0-1.0
 
-cmake_minimum_required (VERSION 3.25)
+cmake_minimum_required (VERSION 4.4)
 
 # An object library (without main) to be used in multiple targets.
 # You can add more external include paths of other projects that are needed for your project.
@@ -31,6 +31,9 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         target_compile_options (gcb20265_lib INTERFACE "-Wnrvo")
     endif ()
 endif ()
+
+# Allow every target below to `import std;` (enabled in the top-level CMakeLists.txt).
+set (CMAKE_CXX_MODULE_STD ON)
 
 # Add the application.
 add_executable (solution_task1 solution_task1.cpp)
