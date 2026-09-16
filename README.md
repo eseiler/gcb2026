@@ -49,19 +49,18 @@ another language:
 
 | Path | What it is |
 |---|---|
-| `include/parse_cmd.hpp` | Provided CLI parser: turns `-i/--input <dir>` into a list of filenames (`cli_args.filenames`). Used as-is by tasks 1, 2, 3, 5. |
-| `include/solution_task4.hpp` | Reference solution for the extended CLI parser (adds `-q/--query`) that tasks 4–6 need. |
-| `src/task1.py` | A Python reference implementation of task 1's logic. If you want to see *what* the program should do before writing the C++ *how*, start here. |
-| `src/gcb_task1_code_with_me_scaffold.cpp` | Skeleton for task 1 — we fill this in together live at the start of the workshop. |
-| `src/gcb_task2_scaffold.cpp`, `src/gcb_task3_scaffold.cpp` | Skeletons (with `// TODO`-style comments) to use as your starting point for tasks 2 and 3. |
-| `src/solution_taskX.cpp` | Full reference solution for task `X`. Try the task yourself first — peek only if you're stuck or want to double-check your result. |
+| `include/` | Code that is shared between source files can be put here. E.g. `inlcude/parse_cmd.hpp` |
+| `src/` | Put source files here that you will use during this workshop. |
+| `cmake/` | Contains cmake code, can be ignored. |
+| `.github/` | Contains github insructions, can be ignored. |
 
 ## Build & run
 
 ```sh
-mkdir build
-cmake /path/to/src
+mkdir build && cd build
+cmake ..
 make task1   # build a single task, once you've added it (see below)
+make check   # or: build every task currently defined in src/CMakeLists.txt
 ```
 
 Executables land directly in `build/`, so once built you run them as:
