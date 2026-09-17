@@ -207,7 +207,7 @@ Then in `task4.cpp`:
    with `seqan3::align_pairwise` (use a semi-global configuration, i.e.
    leading/trailing gaps in the query are free — see the
    [pairwise alignment tutorial](https://docs.seqan.de/seqan3/main_user/tutorial_pairwise_alignment.html)).
-6. If `result.score() > 80`, print the reference filename.
+4. For each alignment print the reference filename, the reference name (`record.id()`), and the alignment score (`res.score()`) to `std::cout` for every candidate (see "Interpreting alignment scores" below for how to judge them by eye).
 
 ### Task 5 — Build an AMQ index over reference k-mers
 
@@ -242,5 +242,24 @@ Then in `task4.cpp`:
    one with three words; experiment and see how it affects your results).
 4. For each candidate user bin, open the reference file and, for every
    record, compute the semi-global alignment against the query exactly as
-   in task 4.
-5. If `result.score() > 80`, print the reference filename.
+   in task 4. Again, print the reference filename, `record.id()`, and `res.score()` to `std::cout` for every candidate (see "Interpreting alignment scores" below for how to judge them by eye).
+
+---
+
+## Interpreting alignment scores (rough guide)
+
+With the default `seqan3::nucleotide_scoring_scheme{}` (match `0`, mismatch
+`-1`) and the default linear gap cost (`-1` per gap character), `score` is
+exactly the negative edit distance between the query and its best-matching
+window in the reference: `score = -(mismatches + indel_bases)`, max `0`.
+
+| score range | approx. identity | interpretation |
+|---|---|---|
+| ≥ −400 | ≥95% | strong/confident hit |
+| −1600 to −400 | 80–95% | good, likely true positive |
+| −3200 to −1600 | 60–80% | marginal, scrutinize |
+| < −3200 | <60% | noise floor (random background ≈ −0.75·L_query) |
+
+Caveats: `N`/ambiguous IUPAC bases score as hard mismatches, not neutral, so
+assembly gaps inflate the apparent divergence.
+

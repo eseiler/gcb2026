@@ -37,7 +37,9 @@ int main(int argc, char const * argv[])
     auto query_hashes = query | seqan3::views::kmer_hash(seqan3::ungapped{20});
 
     auto agent = hibf.membership_agent();
-    auto & result = agent.membership_for(query_hashes, 3u);
+    auto & result = agent.membership_for(query_hashes, 6817);
+
+    std::cout << "There are " << result.size() << " hits" << std::endl;
 
     for (uint64_t hit_user_bin : result)
     {
@@ -48,18 +50,17 @@ int main(int argc, char const * argv[])
             // Configure the alignment kernel.
             // Example of a semi-global alignment where leading and trailing gaps in the
             // second sequence are not penalised:
-            auto config = seqan3::align_cfg::method_global{seqan3::align_cfg::free_end_gaps_sequence1_leading{false},
-                                                        seqan3::align_cfg::free_end_gaps_sequence2_leading{true},
-                                                        seqan3::align_cfg::free_end_gaps_sequence1_trailing{false},
-                                                        seqan3::align_cfg::free_end_gaps_sequence2_trailing{true}} |
+            auto config = seqan3::align_cfg::method_global{seqan3::align_cfg::free_end_gaps_sequence1_leading{true},
+                                                        seqan3::align_cfg::free_end_gaps_sequence2_leading{false},
+                                                        seqan3::align_cfg::free_end_gaps_sequence1_trailing{true},
+                                                        seqan3::align_cfg::free_end_gaps_sequence2_trailing{false}} |
                         seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}};
 
             // Invoke the pairwise alignment which returns a lazy range over alignment results.
             auto results = seqan3::align_pairwise(std::tie(record.sequence(), query), config);
             auto & res = *results.begin(); // first and only alignment result
 
-            if (res.score() > 80)
-                std::cout << filenames[hit_user_bin] << std::endl;
+            std::cout << filenames[hit_user_bin] << ":" << record.id() << "\tscore:" << res.score() << std::endl;
         }
     }
 }
