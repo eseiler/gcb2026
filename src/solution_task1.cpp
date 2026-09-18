@@ -2,12 +2,11 @@
 // SPDX-FileCopyrightText: 2016-2025 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>   // for std::cout
-#include <string>     // for std::string
-#include <fstream>    // for fstream
-#include <filesystem> // for std::filesystem(::path)
-
+#include <filesystem>    // for std::filesystem(::path)
+#include <fstream>       // for fstream
+#include <iostream>      // for std::cout
 #include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
+#include <string>        // for std::string
 
 int main(int argc, char const * argv[])
 {
@@ -47,10 +46,6 @@ int main(int argc, char const * argv[])
         ++file_counter;
     }
 
-    std::cout << "DONE -- " << protein_structure_counter
-              << "/" << file_counter
-              << " files. Total of (words) "
+    std::cout << "DONE -- " << protein_structure_counter << "/" << file_counter << " files. Total of (words) "
               << word_count << std::endl;
 }
-
-

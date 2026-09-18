@@ -2,24 +2,22 @@
 // SPDX-FileCopyrightText: 2016-2025 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>   // for std::cout
-#include <string>     // for std::string
-#include <fstream>    // for fstream
-#include <filesystem> // for std::filesystem(::path)
+#include <filesystem>         // for std::filesystem(::path)
+#include <fstream>            // for fstream
+#include <iostream>           // for std::cout
+#include <solution_task4.hpp> // local header that provides parse_cmd for command line parsing
+#include <string>             // for std::string
 
-#include <cereal/archives/binary.hpp> // for BinaryOutputArchive
-#include <cereal/types/vector.hpp> // IWYU pragma: keep
-#include <hibf/cereal/path.hpp> // IWYU pragma: keep
-
-#include <hibf/config.hpp>                                // for config, insert_iterator
-#include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
-
-#include <seqan3/io/sequence_file/input.hpp>
-#include <seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>
 #include <seqan3/alignment/pairwise/align_pairwise.hpp>
+#include <seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>
+#include <seqan3/io/sequence_file/input.hpp>
 #include <seqan3/search/views/kmer_hash.hpp>
 
-#include <solution_task4.hpp> // local header that provides parse_cmd for command line parsing
+#include <cereal/archives/binary.hpp>                     // for BinaryOutputArchive
+#include <cereal/types/vector.hpp>                        // IWYU pragma: keep
+#include <hibf/cereal/path.hpp>                           // IWYU pragma: keep
+#include <hibf/config.hpp>                                // for config, insert_iterator
+#include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
 
 int main(int argc, char const * argv[])
 {
@@ -51,10 +49,10 @@ int main(int argc, char const * argv[])
             // Example of a semi-global alignment where leading and trailing gaps in the
             // second sequence are not penalised:
             auto config = seqan3::align_cfg::method_global{seqan3::align_cfg::free_end_gaps_sequence1_leading{true},
-                                                        seqan3::align_cfg::free_end_gaps_sequence2_leading{false},
-                                                        seqan3::align_cfg::free_end_gaps_sequence1_trailing{true},
-                                                        seqan3::align_cfg::free_end_gaps_sequence2_trailing{false}} |
-                        seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}};
+                                                           seqan3::align_cfg::free_end_gaps_sequence2_leading{false},
+                                                           seqan3::align_cfg::free_end_gaps_sequence1_trailing{true},
+                                                           seqan3::align_cfg::free_end_gaps_sequence2_trailing{false}}
+                        | seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}};
 
             // Invoke the pairwise alignment which returns a lazy range over alignment results.
             auto results = seqan3::align_pairwise(std::tie(record.sequence(), query), config);

@@ -2,22 +2,20 @@
 // SPDX-FileCopyrightText: 2016-2025 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>   // for std::cout
-#include <string>     // for std::string
-#include <fstream>    // for fstream
-#include <filesystem> // for std::filesystem(::path)
-
-#include <cereal/archives/binary.hpp> // for BinaryOutputArchive
-#include <cereal/types/vector.hpp> // IWYU pragma: keep
-
-#include <hibf/cereal/path.hpp> // IWYU pragma: keep
-#include <hibf/config.hpp>                                // for config, insert_iterator
-#include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
+#include <filesystem>    // for std::filesystem(::path)
+#include <fstream>       // for fstream
+#include <iostream>      // for std::cout
+#include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
+#include <string>        // for std::string
 
 #include <seqan3/io/sequence_file/input.hpp>
 #include <seqan3/search/views/kmer_hash.hpp>
 
-#include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
+#include <cereal/archives/binary.hpp>                     // for BinaryOutputArchive
+#include <cereal/types/vector.hpp>                        // IWYU pragma: keep
+#include <hibf/cereal/path.hpp>                           // IWYU pragma: keep
+#include <hibf/config.hpp>                                // for config, insert_iterator
+#include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
 
 // Build a Hierarchical Interleaved Bloom Filter (HIBF) on the Paper Data
 int main(int argc, char const * argv[])
@@ -36,8 +34,8 @@ int main(int argc, char const * argv[])
         }
     };
 
-    seqan::hibf::config config{.input_fn = file_data, // required
-                               .number_of_user_bins = args.filenames.size(),     // required
+    seqan::hibf::config config{.input_fn = file_data,                        // required
+                               .number_of_user_bins = args.filenames.size(), // required
                                .threads = 1u};
 
     // The HIBF constructor will determine a hierarchical layout for the user bins and build the filter.

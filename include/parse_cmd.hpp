@@ -38,14 +38,10 @@ cli_args parse_cmd(int argc, char const * argv[])
     // and disables update notifications (Doc: https://docs.seqan.de/sharg/main_user/about_update_notifications.html)
     sharg::parser parser{"Papertracker", argc, argv, sharg::update_notifications::off};
 
-
     // add CMD option '-i/--input' that sets the parameter args.input_path
-    parser.add_option(args.input_path,
-                      sharg::config{.short_id = 'i',
-                                    .long_id = "input",
-                                    .description = "path to files",
-                                    .required = true});
-
+    parser.add_option(
+        args.input_path,
+        sharg::config{.short_id = 'i', .long_id = "input", .description = "path to files", .required = true});
 
     try // go and let the parser parse the command line
     {
@@ -59,7 +55,7 @@ cli_args parse_cmd(int argc, char const * argv[])
 
     // input path is now set.
     // loop over all files in args.input_path and store all filenames in args.filenames
-    for (const auto & entry : std::filesystem::directory_iterator(args.input_path))
+    for (auto const & entry : std::filesystem::directory_iterator(args.input_path))
         args.filenames.push_back(entry.path());
 
     return args;

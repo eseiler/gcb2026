@@ -2,17 +2,15 @@
 // SPDX-FileCopyrightText: 2016-2025 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>   // for std::cout
-#include <string>     // for std::string
-#include <fstream>    // for fstream
-#include <filesystem> // for std::filesystem(::path)
-
+#include <filesystem>    // for std::filesystem(::path)
+#include <fstream>       // for fstream
+#include <iostream>      // for std::cout
 #include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
+#include <string>        // for std::string
 
-#include <cereal/archives/binary.hpp> // for BinaryOutputArchive
-#include <cereal/types/vector.hpp> // IWYU pragma: keep
-#include <hibf/cereal/path.hpp> // IWYU pragma: keep
-
+#include <cereal/archives/binary.hpp>                     // for BinaryOutputArchive
+#include <cereal/types/vector.hpp>                        // IWYU pragma: keep
+#include <hibf/cereal/path.hpp>                           // IWYU pragma: keep
 #include <hibf/config.hpp>                                // for config, insert_iterator
 #include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
 
@@ -68,7 +66,6 @@ int main()
             word_count += counter;
         }
     }
-    std::cout << "DONE -- " << protein_structure_counter
-              << "/" << hibf.number_of_user_bins
+    std::cout << "DONE -- " << protein_structure_counter << "/" << hibf.number_of_user_bins
               << " files. Total of (words): " << word_count << std::endl;
 }
