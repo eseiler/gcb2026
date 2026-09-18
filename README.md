@@ -155,7 +155,7 @@ builds the AMQ index, task 6 queries it and only aligns the candidates.
 
 ## Task 4 — Baseline: align the query against every reference
 
-In `task4.cpp` using `task4.hpp` helper functions `parse_cmd` you should parse the command line with `parse_cmd` that no has, additionally to the `-i/input` option, a `-q/--query` option for the input query path. Create ` seqan3::sequence_file_input` on the query filepath and store the sequence from the first and only record of the file in a variable `query`. Loop over all files and open each reference file using `seqan3::sequence_file_input` again. Loop over each record in the sequence file (There can be plasmid DNA additional to the genome). For each reference sequence compute a semi global alignment using `seqan3::align_pairwise` with a `seqan3::align_cfg` config object that configures `seqan3::align_cfg::method_global` for a semi global alignment,`seqan3::align_cfg::scoring_scheme` with a `seqan3::nucleotide_scoring_scheme{}` and `seqan3::align_cfg::band_fixed_size` with `seqan3::align_cfg::lower_diagonal{-9000}` and `seqan3::align_cfg::upper_diagonal{500}`. Print the filename, reference name and alignment score for each file to the command line.
+In `task4.cpp` using `task4.hpp` helper functions `parse_cmd` you should parse the command line with `parse_cmd` that now has, additionally to the `-i/input` option, a `-o/--output-index` option for the input query path. Create ` seqan3::sequence_file_input` on the query filepath and store the sequence from the first and only record of the file in a variable `query`. Loop over all files and open each reference file using `seqan3::sequence_file_input` again. Loop over each record in the sequence file (There can be plasmid DNA additional to the genome). For each reference sequence compute a semi global alignment using `seqan3::align_pairwise` with a `seqan3::align_cfg` config object that configures `seqan3::align_cfg::method_global` for a semi global alignment,`seqan3::align_cfg::scoring_scheme` with a `seqan3::nucleotide_scoring_scheme{}` and `seqan3::align_cfg::band_fixed_size` with `seqan3::align_cfg::lower_diagonal{-9000}` and `seqan3::align_cfg::upper_diagonal{500}`. Print the filename, reference name and alignment score for each file to the command line.
 
 Documentation you'll need:
 - [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
@@ -163,48 +163,16 @@ Documentation you'll need:
 
 **Need more guidance?** Check out the step by step guide at the end
 
-
-**Starting point:** copy your `task1.cpp` to `task4.cpp`.
-
-First, create a new header `include/mapper_parse_cmd.hpp` by copying
-`include/parse_cmd.hpp` and extending its `cli_args`/`parse_cmd`:
-1. Add a member `std::filesystem::path query_path;` to `cli_args`.
-2. Add a new required sharg option `-q`/`--query` that fills
-   `args.query_path` (copy the pattern used for `-i`/`--input`).
-
-(`include/solution_task4.hpp` is the reference solution for this header, in
-case you want to check your work.)
-
-Then in `task4.cpp`:
-1. Include `<seqan3/io/sequence_file/input.hpp>`.
-2. Read the query sequence:
-   `seqan3::sequence_file_input query_file{args.query_path};` and take the
-   `.sequence()` of its first (and only) record — see the
-   [`sequence_file_input` docs](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html).
-3. Replace `std::fstream` with `seqan3::sequence_file_input` for each
-   reference file.
-4. Replace the `while (file >> word)` loop with a `for (auto && record :
-   reference_file)` loop over the FASTA/FASTQ records.
-5. For each reference record, align `record.sequence()` against the query
-   with `seqan3::align_pairwise` (use a semi-global configuration, i.e.
-   leading/trailing gaps in the query are free — see the
-   [pairwise alignment tutorial](https://docs.seqan.de/seqan3/main_user/tutorial_pairwise_alignment.html)).
-4. For each alignment print the reference filename, the reference name (`record.id()`), and the alignment score (`res.score()`) to `std::cout` for every candidate (see "Interpreting alignment scores" below for how to judge them by eye).
-
 ## Task 5 — Build an AMQ index over reference k-mers
 
-**Starting point:** copy your `task2.cpp` to `task5.cpp`.
+Write the file `task5.cpp` that uses the helper functions in `task5.hpp` for parsing the command line (`parse_cmd`) and storing an hibf (`store`).
 
-1. Replace `std::fstream` with `seqan3::sequence_file_input` for the
-   reference files (include `<seqan3/io/sequence_file/input.hpp>`).
-2. Replace the word-reading `while` loop with a `for` loop over the
-   FASTA/FASTQ records.
-3. For each record, hash its sequence into k-mers with
-   `record.sequence() | seqan3::views::kmer_hash(seqan3::ungapped{k})`
-   (include `<seqan3/search/views/kmer_hash.hpp>`; try `k = 20` to start,
-   then feel free to experiment) and insert every hash via `it = hash`,
-   just like you inserted word hashes in task 2. See the
-   [`kmer_hash` docs](https://docs.seqan.de/seqan3/main_user/group__search__views.html#ga6e598d6a021868f704d39df73252974f).
+Parse the command line as usual. Create a `file_data` lambda function as you have done in task 2 but now open a `seqan3::sequence_input_file` for the current file, loop over the records (of reference sequences) in the file and then loop over each records `sequence()`, hashed by the `seqn3::views::kmer_hash`. COnstruct the `seqn3::views::kmer_hash` with a k-mer size of `20` and assign each hash to the iterator `it` of the lambda. Construct and store the hibf as you have done in task 2.
+
+Documentation you'll need:
+- [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
+- [seqan3::kmer_hash](https://docs.seqan.de/seqan3/main_user/group__search__views.html#ga6e598d6a021868f704d39df73252974f))
+- HIBF API documentation: https://docs.seqan.de/hibf/main/index.html
 
 ## Task 6 — Query the index, then align only the candidates
 
@@ -262,11 +230,11 @@ Building an HIBF on the mock paper data
    - `-i/--input` for the input directory
    - `-o/--output-index` for the index filename
 5. Copy over this lambda signiture
-   ```
-       auto file_data = [&](size_t const file_idx, seqan::hibf::insert_iterator it)
-    {
-        // todo
-    };
+   ```c++
+   auto file_data = [&](size_t const file_idx, seqan::hibf::insert_iterator it)
+   {
+       // todo
+   };
    ```
 6. Within the `file_data lambda`
    1. Open a `std::fstream` named `file` that is constructed with the filename at position `file_idx` in the vector `args.filenames`. A vector is accessed via `[]`.
@@ -277,8 +245,6 @@ Building an HIBF on the mock paper data
 8. Create a `seqan::hibf::config` config object named `config` that is initialized using designated initialisers. Set `.input_fn` to `file_data` and `.number_of_user_bins` to the number of files (hint: the size of a vector `v` can be accessed with `v.size()`).
 9. Construct the filter: `seqan::hibf::hierarchical_interleaved_bloom_filter hibf` initialized with the config object from step 7.
 10. Store **both** `hibf` and `args.filenames` to disk using the store function `store(hibf, args.filenames, args.index_path)`.
-   `cereal::BinaryOutputArchive` (you need the filenames again in task 3 to
-   turn a matched user-bin index back into a path).
 
 Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task2.cpp`.
 
@@ -298,6 +264,62 @@ Querying an HIBF on the mock paper data and counting words
 8. Use the `agent` to query the HIBF by using the member function `agent.membership_for(query, threshold)`, passing the query vector and a appripiate numeric threshold value (e.g. `1` or `1000`). The `result` of the member function is again stored in a variable using `auto`.
 9. The result is a vector of numeric values indicating the file indices of files that likely contain the three query words. Loop ofer the `result` vector with a for loop `for (file_idx : result)`.
 10. Now you need to do the exact same analysis as you have done in task 1 for the candidate files. Follow the steps 1-8 of task 1 again or copy over the code and adapt in to this for loop.
+
+Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task3.cpp`.
+
+## Task 4
+
+1. Create `src/task4.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+2. Create a `main` function like in task 1.
+4. Include `#include <iostream>` and `#include <task4.hpp>`.
+4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task4.hpp` you can see that it now has two options
+   - `-i/--input` for the input directory
+   - `-o/--output-index` for the index filename
+5. Include `<seqan3/io/sequence_file/input.hpp>`.
+6. Construct a `seqan3::sequence_file_input` file named `query_file` given the query path `args.query_path`. ([`sequence_file_input` docs](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html))
+7. Retrieve the query sequence of the first and only record like this: `auto & query = query_file.begin()->sequence()`. Explanation: `query_file.begin()` gives an iterator to the query_file range. `->` gives access to the member function of the object pointed to by the iterator and `sequence()` gives you the sequence of the record.
+8. Loop over the filenames in `args.filenames` as you have done in task 1.
+9. Within the for loop, construct a `seqan3::sequence_file_input` named `reference_file` on the current filename.
+10. Loop over the records of the `reference_file` via `for (auto && record : reference_file)`.
+11. Within this for loop, create the following alignment config object,
+  but replace each XXX with either true or false to configer a correct semi-global
+  alignment:
+  ```c++
+              auto config = seqan3::align_cfg::method_global{seqan3::align_cfg::free_end_gaps_sequence1_leading{XXX},
+                                                           seqan3::align_cfg::free_end_gaps_sequence2_leading{XXX},
+                                                           seqan3::align_cfg::free_end_gaps_sequence1_trailing{XXX},
+                                                           seqan3::align_cfg::free_end_gaps_sequence2_trailing{XXX}}
+                        | seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}}
+                        | seqan3::align_cfg::band_fixed_size{seqan3::align_cfg::lower_diagonal{-9000},
+                                                             seqan3::align_cfg::upper_diagonal{500}};
+  ```
+12. Then, invoke the pairwise alignment which returns a lazy range over alignment results with `auto result_range = seqan3::align_pairwise(std::tie(record.sequence(), query), config)`.
+13. Given the `result_range` range, aquire its start iterator with the member function `begin()` and directly dereference this iterator using `*` to get the `alignment_result` of type `auto &`.
+14. Print out the current `filename`, the reference name via the member function `id()` of the `record` and the score of the alignment via  `alignment_result.score()`.
+
+Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task4.cpp`.
+
+## Task 5
+
+1. Create `src/task5.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+2. Create a `main` function like in task 1.
+4. Include `#include <iostream>` and `#include <task5.hpp>`.
+4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task5.hpp` you can see that it now has two options
+   - `-i/--input` for the input directory
+   - `-o/--output-index` for the index filename
+5. Include `<seqan3/io/sequence_file/input.hpp>`.
+6. Copy over this lambda signiture
+   ```c++
+   auto file_data = [&](size_t const file_idx, seqan::hibf::insert_iterator it)
+   {
+       // todo
+   };
+   ```
+7. Within the lambda, construct a `seqan3::sequence_file_input` named `file` on the current filename.
+8. Loop over the `record`s of the `file` as you have for example done in task 4.
+9. Within this loop create the `hashes` of type `auto` by piping `|` the `seqan3::kmer_hash` onto the records sequence (`record.sequence()`). Construct the `seqan3::kmer_hash` with an `seqan3::ungapped` shape that represent a standard kmer of size `20`.
+10. Loop over the `hashes` view an add each hash to the lambda iterator via `it = hash`.
+11. After the `file_data` lambda construct and store the hibf just as in task 2. Follow task 2 steps 7-10.
 
 ## Interpreting alignment scores (rough guide)
 

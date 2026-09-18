@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <fstream>       // for fstream
 #include <iostream>      // for std::cout
 
 #include <seqan3/io/sequence_file/input.hpp>
@@ -25,7 +24,8 @@ int main(int argc, char const * argv[])
 
         for (auto && record : file)
         {
-            for (uint64_t hash : record.sequence() | seqan3::views::kmer_hash(seqan3::ungapped{20}))
+            auto hashes = record.sequence() | seqan3::views::kmer_hash(seqan3::ungapped{20});
+            for (uint64_t hash : hashes)
                 it = hash;
         }
     };

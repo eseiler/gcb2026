@@ -2,7 +2,6 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <fstream>       // for fstream
 #include <iostream>      // for std::cout
 
 #include <seqan3/io/sequence_file/input.hpp>
