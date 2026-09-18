@@ -25,7 +25,7 @@ int main(int argc, char const * argv[])
             return 1;
         }
 
-        unsigned counter{0};
+        unsigned word_counter{0};
         bool text_protein{false};
         bool text_3D{false};
         bool text_structure{false};
@@ -34,7 +34,7 @@ int main(int argc, char const * argv[])
 
         while (file >> word)
         {
-            ++counter;
+            ++word_counter;
             if (word == "protein")
                 text_protein = true;
             if (word == "3D")
@@ -46,7 +46,7 @@ int main(int argc, char const * argv[])
         if (text_protein && text_3D && text_structure)
         {
             paper_counter++;
-            total_word_count += counter;
+            total_word_count += word_counter;
         }
 
         ++file_counter;

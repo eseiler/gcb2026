@@ -36,8 +36,6 @@ you exactly which calls to use.
 
 A couple of C++ idioms you'll see that may look unfamiliar coming from
 another language:
-* `import std;` pulls in the whole standard library at once (a C++23
-  module). It's equivalent to writing several `#include <...>` lines.
 * `[&](size_t id, insert_iterator it) { ... }` is a **lambda**, an inline
   anonymous function. `[&]` means "capture surrounding variables by
   reference", similar to a Python closure.
@@ -49,10 +47,10 @@ another language:
 
 | Path | What it is |
 |---|---|
-| `include/` | Code that is shared between source files can be put here. E.g. `inlcude/parse_cmd.hpp` |
+| `include/` | Each task has a helper `.hpp` file you can include. |
 | `src/` | Put source files here that you will use during this workshop. |
-| `cmake/` | Contains cmake code, can be ignored. |
-| `.github/` | Contains github insructions, can be ignored. |
+| `scaffolds/` | If you are unexperienced in C++ use the scaffolds to solve the tasks. |
+| `solutions/` | Don't peak! |
 
 ## Build & run
 
@@ -60,7 +58,6 @@ another language:
 mkdir build && cd build
 cmake ..
 make task1   # build a single task, once you've added it (see below)
-make check   # or: build every task currently defined in src/CMakeLists.txt
 ```
 
 Executables land directly in `build/`, so once built you run them as:
@@ -84,7 +81,7 @@ Re-run `cmake .` in the build directory once after adding a new executable so CM
 
 ---
 
-## Part 1 — Benefits of an AMQ filter
+# Part 1 — Benefits of an AMQ filter
 
 We have a directory of plain-text "papers". We want to find every paper
 that mentions all three words `"3D"`, `"protein"`, `"structure"`, and the
@@ -96,28 +93,27 @@ total word count across those papers.
   smaller) set of files the filter flagged as candidates — this is the
   speed-up an AMQ filter buys you.
 
-### Task 1 — Baseline: scan every file
+## Task 1 — Baseline: scan every file
 
-**Starting point:** copy `src/gcb_task1_code_with_me_scaffold.cpp` to
-`src/task1.cpp` (we'll do this together during the session).
+If you haven't been coding the scaffold during the workshop with us copy over `scaffolds/task1_scaffold.cpp` to `src/task1.cpp`.
 
-`task1.cpp` should:
-1. Call `parse_cmd(argc, argv)` to get `args.filenames` (the scaffold
-   already does this).
-2. For each filename, read the file word by word (the scaffold's `while
-   (file >> word)` loop already does this) and track:
-   - whether the words `"3D"`, `"protein"` and `"structure"` all appeared
-     at least once in the file, and
-   - the total number of words in the file.
-3. If a file contained all three words, add its word count to a running
-   total and count it as a match.
-4. Print how many files matched out of how many were checked, and the
-   total word count of the matching files.
+For each file, check if the **file containes the words** `"3D"`, `"protein"` and `"structure"` and if so add the word count of the file to a total word counter. In the end print out
+- the total number of files,
+- the number of files that contained the three query words and
+- the total word count of all files that contained the three query words
+
+Then run your program:
+
+```
+./build/task1 -i data/mock_papers
+```
 
 Tip: `src/task1.py` implements the exact same logic in Python — useful to
 compare against once your C++ version compiles and runs.
 
-### Task 2 — Build an AMQ index over all files
+**Need more guidance?** Check out the step by step guide at the end
+
+## Task 2 — Build an AMQ index over all files
 
 **Starting point:** copy `src/gcb_task2_scaffold.cpp` to `src/task2.cpp`.
 
@@ -140,7 +136,7 @@ compare against once your C++ version compiles and runs.
 Needed includes: `<cereal/archives/binary.hpp>`, `<hibf/config.hpp>`,
 `<hibf/hierarchical_interleaved_bloom_filter.hpp>`.
 
-### Task 3 — Query the index, then verify only the candidates
+## Task 3 — Query the index, then verify only the candidates
 
 **Starting point:** copy `src/gcb_task3_scaffold.cpp` to `src/task3.cpp`.
 
@@ -168,7 +164,7 @@ that gap is the benefit an AMQ filter gives you.
 
 ---
 
-## Part 2 — Read mapper with AMQ
+# Part 2 — Read mapper with AMQ
 
 Same idea as Part 1, but on real sequence data (FASTA/FASTQ) instead of
 plain text, and using **k-mer hashes** instead of whole-word hashes. A
@@ -180,7 +176,7 @@ a real pairwise **semi-global alignment** and checking its score.
 Tasks 4–6 mirror tasks 1–3 one-to-one: task 4 is the naive baseline, task 5
 builds the AMQ index, task 6 queries it and only aligns the candidates.
 
-### Task 4 — Baseline: align the query against every reference
+## Task 4 — Baseline: align the query against every reference
 
 **Starting point:** copy your `task1.cpp` to `task4.cpp`.
 
@@ -209,7 +205,7 @@ Then in `task4.cpp`:
    [pairwise alignment tutorial](https://docs.seqan.de/seqan3/main_user/tutorial_pairwise_alignment.html)).
 4. For each alignment print the reference filename, the reference name (`record.id()`), and the alignment score (`res.score()`) to `std::cout` for every candidate (see "Interpreting alignment scores" below for how to judge them by eye).
 
-### Task 5 — Build an AMQ index over reference k-mers
+## Task 5 — Build an AMQ index over reference k-mers
 
 **Starting point:** copy your `task2.cpp` to `task5.cpp`.
 
@@ -224,7 +220,7 @@ Then in `task4.cpp`:
    just like you inserted word hashes in task 2. See the
    [`kmer_hash` docs](https://docs.seqan.de/seqan3/main_user/group__search__views.html#ga6e598d6a021868f704d39df73252974f).
 
-### Task 6 — Query the index, then align only the candidates
+## Task 6 — Query the index, then align only the candidates
 
 **Starting point:** copy your `task3.cpp` to `task6.cpp`.
 
@@ -245,6 +241,29 @@ Then in `task4.cpp`:
    in task 4. Again, print the reference filename, `record.id()`, and `res.score()` to `std::cout` for every candidate (see "Interpreting alignment scores" below for how to judge them by eye).
 
 ---
+
+# Step by step task solving
+
+## Task 1
+
+If you haven't been coding the scaffold during the workshop with us copy over `scaffolds/task1_scaffold.cpp` to `src/task1.cpp`.
+
+1. **Before the for loop**, create three counter variables of type `unsinged` initialized to `0`:  `file_counter`, `paper_counter`, `total_word_count`, like this `unsigned count{0};`
+2. **Before the while loop**, create a counter variable of type `unsigned` initialized to `0` named `word_counter`.
+3. **Before the while loop**, create three `bool`eans named `text_protein`, `text_3D`, `text_structure` initialized to `false`.
+4. **Within the for loop** increase `word_counter` by one, since we can count the words while checking them right away.
+5. **Within the for loop** create an if clause for each query word (`"3D"`, `"protein"` and `"structure"`) checking if the variable `word` equals the query word and if so, set the respective boolean to true (e.g. `if *(word == "foo) text_foo = true`).
+6. **After the while loop** Check with an if clause if all three booleans from step 3 are set to true and if so, increase `paper_counter ` by one and add `word_counter` to `total_word_count`.
+7. **After the while loop** increase `file_counter` by one.
+8. **After the for loop** print out all counters using `std::cout`, e.g. << `std::cout << "done: " << counter;`.
+
+Then run your program:
+
+```
+./build/task1 -i data/mock_papers
+```
+Tip: `src/task1.py` implements the exact same logic in Python — useful to
+compare against once your C++ version compiles and runs.
 
 ## Interpreting alignment scores (rough guide)
 
