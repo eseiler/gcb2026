@@ -115,7 +115,9 @@ compare against once your C++ version compiles and runs.
 
 ## Task 2 — Build an AMQ index over all files
 
-Write the file `task2.cpp` that uses the helper functions in `task2.hpp` for parsing the command line (`parse_cmd`) and storing an hibf (`store`). Create an HIBF on the same files as before, supplying only required fields to the HIBF config object. The input to the HIBF is a lambda function, that should open a file and hash each word in the file using `std::hash`. In the end, store the index using the `store` function from `task2.hpp` and use the paremeter `args.index_path` parsed from the command line as the output filename.
+Write the file `task2.cpp` that uses the helper functions in `task2.hpp` for parsing the command line (`parse_cmd`) and storing an hibf (`store`).
+
+Create an HIBF on the same files as before, supplying only required fields to the HIBF config object. The input to the HIBF is a lambda function, that should open a file and hash each word in the file using `std::hash`. In the end, store the index using the `store` function from `task2.hpp` and use the paremeter `args.index_path` parsed from the command line as the output filename.
 
 Documentation you'll need:
 - HIBF lib: https://github.com/seqan/hibf (note the snippet on the landing page)
@@ -126,29 +128,17 @@ Documentation you'll need:
 
 ## Task 3 — Query the index, then verify only the candidates
 
-**Starting point:** copy `src/gcb_task3_scaffold.cpp` to `src/task3.cpp`.
+Write the file `task3.cpp` that uses the helper functions in `task3.hpp` for parsing the command line (`parse_cmd`) and loading an hibf (`load`).
 
-`task3.cpp` should:
-1. Load the `hierarchical_interleaved_bloom_filter` and the filenames
-   vector back from `test.hibf` with a `cereal::BinaryInputArchive`
-   (mirroring how task 2 saved them).
-2. Build a query: `std::vector<uint64_t>` holding
-   `std::hash<std::string>{}(word)` for each of `"protein"`, `"3D"`,
-   `"structure"`.
-3. Get a `hibf.membership_agent()` and call
-   `agent.membership_for(query, 3u)` — the `3u` means "only report user
-   bins where all 3 of the query hashes were found". The result is a range
-   of user-bin indices, i.e. candidate files.
-4. For each candidate index, look up its filename in the filenames vector,
-   open **only that file**, and re-check (exactly as in task 1) that all
-   three words are really present — the filter can have false positives,
-   so this confirmation step is required.
-5. If confirmed, add the file's word count to the running total.
-6. Print the same summary as task 1: number of confirmed files (out of the
-   total number of user bins) and their total word count.
+Parse the command line with `parse_cmd`. Create an HIBF and filenames object and load them from disk given the `args.index_path` path. Create a vector of three query hashes, that contain the words `"3D"`, `"protein"` and `"structure"` hashed `by std::hash`. Use the HIBF to query these words in the index with a appropiate threshold. Loop over the resulting hits and do the same as in task1: Open the candidate file, count the words, if all three query words are contained, add the count to the total word counter and output the results in the end.
 
-Compare how many files you actually had to open here versus in task 1 —
-that gap is the benefit an AMQ filter gives you.
+
+Documentation you'll need:
+- HIBF lib: https://github.com/seqan/hibf (note the snippet on the landing page)
+- HIBF API documentation: https://docs.seqan.de/hibf/main/index.html
+- `std::hash`: https://en.cppreference.com/cpp/utility/hash
+
+**Need more guidance?** Check out the step by step guide at the end
 
 ---
 
@@ -283,6 +273,23 @@ Building an HIBF on the mock paper data
    turn a matched user-bin index back into a path).
 
 Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task2.cpp`.
+
+## Task 3
+
+Querying an HIBF on the mock paper data and counting words
+
+1. Create `src/task3.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+2. Create a `main` function like in task 1.
+3. Include `#include <iostream>`, `#include <fstream>` and `#include <task3.hpp>`.
+4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task3.hpp` you can see that it has the only option `-i/--index` for the index filename.
+5. Create an `seqan::hibf::hierarchical_interleaved_bloom_filter` named `hibf` without initializing it. As an example, creating a number without initialising it is done by `int a;`.
+4. Create `std::vector<std::filesystem::path>` named filenames without initializing it.
+5. Load hibf index and filenames using the load function `load(hibf, filenames, args.index_path)`.
+6. Construct a `std::vector<uint64_t>` on three input arguments: `"3D"`, `"protein"` and `"structure"` eached hashed by `std::hash` just as in task 2. A vector with three elements is for example constructed like this: `std::vector<uint64_t>{1,2,3}`.
+7. Create an hibf agent called `agent` using the memberfunction `membership_agent()` on the `hibf` object. THe type of the `agent` variable can be `auto`. Example with `auto`: `auto a = 3`, a is type `int`.
+8. Use the `agent` to query the HIBF by using the member function `agent.membership_for(query, threshold)`, passing the query vector and a appripiate numeric threshold value (e.g. `1` or `1000`). The `result` of the member function is again stored in a variable using `auto`.
+9. The result is a vector of numeric values indicating the file indices of files that likely contain the three query words. Loop ofer the `result` vector with a for loop `for (file_idx : result)`.
+10. Now you need to do the exact same analysis as you have done in task 1 for the candidate files. Follow the steps 1-8 of task 1 again or copy over the code and adapt in to this for loop.
 
 ## Interpreting alignment scores (rough guide)
 

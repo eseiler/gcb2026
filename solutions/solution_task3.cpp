@@ -28,11 +28,11 @@ int main(int argc, char const * argv[])
 
     unsigned paper_counter{};
     unsigned word_count{};
-    for (uint64_t hit_user_bin : result)
+    for (uint64_t file_idx : result)
     {
         unsigned counter{};
 
-        std::fstream file{filenames[hit_user_bin]};
+        std::fstream file{filenames[file_idx]};
 
         if (!file.is_open())
         {
