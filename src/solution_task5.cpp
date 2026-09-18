@@ -9,7 +9,7 @@
 #include <string>        // for std::string
 
 #include <seqan3/io/sequence_file/input.hpp>
-#include <seqan3/search/views/kmer_hash.hpp>
+#include <seqan3/search/views/minimiser_hash.hpp>
 
 #include <cereal/archives/binary.hpp>                     // for BinaryOutputArchive
 #include <cereal/types/vector.hpp>                        // IWYU pragma: keep
@@ -29,6 +29,10 @@ int main(int argc, char const * argv[])
 
         for (auto && record : file)
         {
+            // for (uint64_t hash : record.sequence()
+            //                          | seqan3::views::minimiser_hash(seqan3::shape{seqan3::ungapped{20}},
+            //                                                          seqan3::window_size{20},
+            //                                                          seqan3::seed{0}))
             for (uint64_t hash : record.sequence() | seqan3::views::kmer_hash(seqan3::ungapped{20}))
                 it = hash;
         }

@@ -12,6 +12,7 @@
 #include <seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>
 #include <seqan3/io/sequence_file/input.hpp>
 #include <seqan3/search/views/kmer_hash.hpp>
+#include <seqan3/search/views/minimiser_hash.hpp>
 
 #include <cereal/archives/binary.hpp>                     // for BinaryOutputArchive
 #include <cereal/types/vector.hpp>                        // IWYU pragma: keep
@@ -32,10 +33,14 @@ int main(int argc, char const * argv[])
 
     seqan3::sequence_file_input query_file{args.query_path};
     auto & query = (*query_file.begin()).sequence();
+    // auto query_hashes =
+    //     query
+    //     | seqan3::views::minimiser_hash(seqan3::shape{seqan3::ungapped{20}}, seqan3::window_size{20}, seqan3::seed{0});
     auto query_hashes = query | seqan3::views::kmer_hash(seqan3::ungapped{20});
+    size_t const threshold = static_cast<size_t>((query.size() - 20 + 1) * 0.9);
 
     auto agent = hibf.membership_agent();
-    auto & result = agent.membership_for(query_hashes, 6817);
+    auto & result = agent.membership_for(query_hashes, threshold);
 
     std::cout << "There are " << result.size() << " hits" << std::endl;
 
@@ -52,7 +57,9 @@ int main(int argc, char const * argv[])
                                                            seqan3::align_cfg::free_end_gaps_sequence2_leading{false},
                                                            seqan3::align_cfg::free_end_gaps_sequence1_trailing{true},
                                                            seqan3::align_cfg::free_end_gaps_sequence2_trailing{false}}
-                        | seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}};
+                        | seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}}
+                        | seqan3::align_cfg::band_fixed_size{seqan3::align_cfg::lower_diagonal{-500},
+                                                             seqan3::align_cfg::upper_diagonal{500}};
 
             // Invoke the pairwise alignment which returns a lazy range over alignment results.
             auto results = seqan3::align_pairwise(std::tie(record.sequence(), query), config);
@@ -62,3 +69,9 @@ int main(int argc, char const * argv[])
         }
     }
 }
+
+// Band 500; 90% threshold
+//                 Hit files   alignments  Time[s]
+// Align           154         523         12.8
+// AMQ-minimizer   54          347         8.1
+// AMQ-kmer        26          179         5.5
