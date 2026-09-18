@@ -31,13 +31,13 @@ int main(int argc, char const * argv[])
     size_t const threshold = XXX /*Whats a good threshold?*/;
 
     auto agent = XXX/*get membership_agent from hibf*/;
-    auto & result = agent.membership_for(XXX/*The query objext*/, XXX/*A threshold*/);
+    auto & result = agent.membership_for(XXX/*The query objext*/, threshold);
 
     std::cout << "There are " << result.size() << " hits" << std::endl;
 
     for (uint64_t hit_user_bin : result)
     {
-        XXX // open a std::fstream on the file at position filenames[hit_user_bin]
+        XXX // create a reference_file with a seqan3::sequence_file_input at position filenames[hit_user_bin]
 
         for (auto && record : reference_file)
         {
