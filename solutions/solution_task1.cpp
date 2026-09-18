@@ -1,12 +1,11 @@
-// SPDX-FileCopyrightText: 2006-2026 Knut Reinert & Freie Universität Berlin
-// SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
+// SPDX-FileCopyrightText: 2006-2025 Knut Reinert & Freie Universität Berlin
+// SPDX-FileCopyrightText: 2016-2025 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <filesystem>    // for std::filesystem(::path)
-#include <fstream>       // for fstream
-#include <iostream>      // for std::cout
-#include <parse_cmd.hpp> // local header that provides parse_cmd for command line parsing
-#include <string>        // for std::string
+#include <iostream>
+#include <fstream>
+
+#include <task1.hpp> // includes helper functions
 
 int main(int argc, char const * argv[])
 {

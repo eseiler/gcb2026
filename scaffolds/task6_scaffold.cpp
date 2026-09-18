@@ -22,12 +22,12 @@ int main(int argc, char const * argv[])
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf;
     std::vector<std::filesystem::path> filenames;
 
-    store(XXX/*The HIBF objext*/, XXX/*The filenames object*/, XXX/*The index file name*/);
+    load(XXX/*The HIBF objext*/, XXX/*The filenames object*/, XXX/*The index file name*/);
 
     XXX // create a query_file with a seqan3::sequence_file_input from the file path args.query_path
     auto & query = (*query_file.begin()).sequence(); // reads in first record
 
-    auto query_hashes = query | XXX /*use seqan3 kmer_hash with a kmer size of 20*/);
+    auto query_hashes = query | XXX /*use seqan3 kmer_hash with a kmer size of 20*/;
     size_t const threshold = XXX /*Whats a good threshold?*/;
 
     auto agent = XXX/*get membership_agent from hibf*/;
@@ -44,10 +44,10 @@ int main(int argc, char const * argv[])
             // Configure the alignment kernel.
             // Example of a semi-global alignment where leading and trailing gaps in the
             // second sequence are not penalised:
-            auto config = seqan3::align_cfg::method_global{seqan3::align_cfg::free_end_gaps_sequence1_leading{true},
-                                                           seqan3::align_cfg::free_end_gaps_sequence2_leading{false},
-                                                           seqan3::align_cfg::free_end_gaps_sequence1_trailing{true},
-                                                           seqan3::align_cfg::free_end_gaps_sequence2_trailing{false}}
+            auto config = seqan3::align_cfg::method_global{seqan3::align_cfg::free_end_gaps_sequence1_leading{XXX/*true or false?*/},
+                                                           seqan3::align_cfg::free_end_gaps_sequence2_leading{XXX/*true or false?*/},
+                                                           seqan3::align_cfg::free_end_gaps_sequence1_trailing{XXX/*true or false?*/},
+                                                           seqan3::align_cfg::free_end_gaps_sequence2_trailing{XXX/*true or false?*/}}
                         | seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}}
                         | seqan3::align_cfg::band_fixed_size{seqan3::align_cfg::lower_diagonal{-9000},
                                                              seqan3::align_cfg::upper_diagonal{500}};

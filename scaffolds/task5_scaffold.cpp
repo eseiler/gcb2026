@@ -34,7 +34,7 @@ int main(int argc, char const * argv[])
                                .number_of_user_bins = XXX /*supply the number of files*/};
 
     // The HIBF constructor will determine a hierarchical layout for the user bins and build the filter.
-    seqan::hibf::hierarchical_interleaved_bloom_filter hibf{config};
+    seqan::hibf::hierarchical_interleaved_bloom_filter hibf{XXX};
 
     // store the HIBF on disk
     store(XXX/*The HIBF objext*/, XXX/*The filenames object*/, XXX/*A file name*/);

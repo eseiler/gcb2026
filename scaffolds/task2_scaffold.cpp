@@ -22,7 +22,7 @@ int main(int argc, char const * argv[])
     {
         XXX // open a std::fstream on the file at position file_idx in args.filenames
 
-        std::string word; //
+        std::string word;
 
         while (file >> word)
             it = XXX /*Use std::hash to hash the word*/;

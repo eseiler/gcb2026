@@ -27,10 +27,10 @@ int main(int argc, char const * argv[])
             // Configure the alignment kernel.
             // Example of a semi-global alignment where leading and trailing gaps in the
             // second sequence are not penalised:
-            auto config = seqan3::align_cfg::method_global{seqan3::align_cfg::free_end_gaps_sequence1_leading{true},
-                                                           seqan3::align_cfg::free_end_gaps_sequence2_leading{false},
-                                                           seqan3::align_cfg::free_end_gaps_sequence1_trailing{true},
-                                                           seqan3::align_cfg::free_end_gaps_sequence2_trailing{false}}
+            auto config = seqan3::align_cfg::method_global{seqan3::align_cfg::free_end_gaps_sequence1_leading{XXX/*true or false?*/},
+                                                           seqan3::align_cfg::free_end_gaps_sequence2_leading{XXX/*true or false?*/},
+                                                           seqan3::align_cfg::free_end_gaps_sequence1_trailing{XXX/*true or false?*/},
+                                                           seqan3::align_cfg::free_end_gaps_sequence2_trailing{XXX/*true or false?*/}}
                         | seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}}
                         | seqan3::align_cfg::band_fixed_size{seqan3::align_cfg::lower_diagonal{-9000},
                                                              seqan3::align_cfg::upper_diagonal{500}};

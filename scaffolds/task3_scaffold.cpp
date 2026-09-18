@@ -16,7 +16,7 @@ int main()
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf;
     std::vector<std::filesystem::path> filenames;
 
-    store(XXX/*The HIBF objext*/, XXX/*The filenames object*/, XXX/*The index file name*/);
+    load(XXX/*The HIBF objext*/, XXX/*The filenames object*/, XXX/*The index file name*/);
 
     // The query contains the three words hashed with std::hash
     std::vector<uint64_t> query{std::hash<std::string>{}("protein"),
