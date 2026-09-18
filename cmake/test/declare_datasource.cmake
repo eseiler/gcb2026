@@ -83,5 +83,5 @@ function (declare_datasource)
         )
     endif ()
 
-    add_dependencies (gcb20265_test "${datasource_name}")
+    add_dependencies (gcb2026_test "${datasource_name}")
 endfunction ()

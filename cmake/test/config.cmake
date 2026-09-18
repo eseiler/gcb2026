@@ -15,32 +15,32 @@ add_definitions (-DDATADIR=\"${CMAKE_CURRENT_BINARY_DIR}/data/\")
 add_definitions (-DBINDIR=\"${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/\")
 
 # Add the test interface library.
-if (NOT TARGET gcb20265_test)
-    add_library (gcb20265_test INTERFACE)
-    target_link_libraries (gcb20265_test INTERFACE GTest::gtest_main gcb20265_lib)
-    add_library (gcb20265::test ALIAS gcb20265_test)
+if (NOT TARGET gcb2026_test)
+    add_library (gcb2026_test INTERFACE)
+    target_link_libraries (gcb2026_test INTERFACE GTest::gtest_main gcb2026_lib)
+    add_library (gcb2026::test ALIAS gcb2026_test)
 endif ()
 
 # Add the check target that builds and runs tests.
 add_custom_target (check COMMAND ${CMAKE_CTEST_COMMAND} ${CMAKE_CTEST_ARGUMENTS})
 
-get_directory_property (gcb20265_targets DIRECTORY "${gcb20265_SOURCE_DIR}/src" BUILDSYSTEM_TARGETS)
-foreach (target IN LISTS gcb20265_targets)
+get_directory_property (gcb2026_targets DIRECTORY "${gcb2026_SOURCE_DIR}/src" BUILDSYSTEM_TARGETS)
+foreach (target IN LISTS gcb2026_targets)
     get_target_property (type ${target} TYPE)
     if (type STREQUAL "EXECUTABLE")
-        list (APPEND gcb20265_EXECUTABLE_LIST ${target})
+        list (APPEND gcb2026_EXECUTABLE_LIST ${target})
     endif ()
 endforeach ()
-unset (gcb20265_targets)
+unset (gcb2026_targets)
 
 macro (add_app_test test_filename)
-    file (RELATIVE_PATH source_file "${gcb20265_SOURCE_DIR}" "${CMAKE_CURRENT_LIST_DIR}/${test_filename}")
+    file (RELATIVE_PATH source_file "${gcb2026_SOURCE_DIR}" "${CMAKE_CURRENT_LIST_DIR}/${test_filename}")
     get_filename_component (target "${source_file}" NAME_WE)
 
     add_executable (${target} ${test_filename})
-    target_link_libraries (${target} gcb20265::test)
+    target_link_libraries (${target} gcb2026::test)
 
-    add_dependencies (${target} ${gcb20265_EXECUTABLE_LIST})
+    add_dependencies (${target} ${gcb2026_EXECUTABLE_LIST})
     add_dependencies (check ${target})
 
     add_test (NAME ${target} COMMAND ${target})

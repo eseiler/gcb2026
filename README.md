@@ -77,7 +77,7 @@ solutions, e.g. for `task1.cpp`:
 
 ```cmake
 add_executable (task1 task1.cpp)
-target_link_libraries (task1 PRIVATE gcb20265_lib)
+target_link_libraries (task1 PRIVATE gcb2026_lib)
 ```
 
 Re-run `cmake .` in the build directory once after adding a new executable so CMake picks it up.

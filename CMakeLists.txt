@@ -5,7 +5,7 @@
 cmake_minimum_required (VERSION 3.25)
 
 # Define the application name and version.
-project (gcb20265
+project (gcb2026
          LANGUAGES CXX
          VERSION 1.0.0
          DESCRIPTION "My application description"
@@ -40,12 +40,12 @@ add_subdirectory (src)
 
 # `make check` builds every executable defined in `src/CMakeLists.txt`, so you can
 # quickly verify that everything (including the tasks you add) still compiles.
-get_property (gcb20265_src_targets DIRECTORY src PROPERTY BUILDSYSTEM_TARGETS)
-foreach (gcb20265_target IN LISTS gcb20265_src_targets)
-    get_target_property (gcb20265_target_type ${gcb20265_target} TYPE)
-    if (gcb20265_target_type STREQUAL "EXECUTABLE")
-        list (APPEND gcb20265_check_targets ${gcb20265_target})
+get_property (gcb2026_src_targets DIRECTORY src PROPERTY BUILDSYSTEM_TARGETS)
+foreach (gcb2026_target IN LISTS gcb2026_src_targets)
+    get_target_property (gcb2026_target_type ${gcb2026_target} TYPE)
+    if (gcb2026_target_type STREQUAL "EXECUTABLE")
+        list (APPEND gcb2026_check_targets ${gcb2026_target})
     endif ()
 endforeach ()
-add_custom_target (check DEPENDS ${gcb20265_check_targets})
+add_custom_target (check DEPENDS ${gcb2026_check_targets})
 
