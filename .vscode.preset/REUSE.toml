@@ -1,0 +1,7 @@
+version = 1
+
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["2006-2026, Knut Reinert & Freie Universität Berlin", "2016-2026, Knut Reinert & MPI für molekulare Genetik"]
+SPDX-License-Identifier = "CC0-1.0"
