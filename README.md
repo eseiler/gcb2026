@@ -130,8 +130,7 @@ Documentation you'll need:
 
 Write the file `task3.cpp` that uses the helper functions in `task3.hpp` for parsing the command line (`parse_cmd`) and loading an hibf (`load`).
 
-Parse the command line with `parse_cmd`. Create an HIBF and filenames object and load them from disk given the `args.index_path` path. Create a vector of three query hashes, that contain the words `"3D"`, `"protein"` and `"structure"` hashed `by std::hash`. Use the HIBF to query these words in the index with a appropiate threshold. Loop over the resulting hits and do the same as in task1: Open the candidate file, count the words, if all three query words are contained, add the count to the total word counter and output the results in the end.
-
+Parse the command line with `parse_cmd`. Create an HIBF and filenames object and load them from disk given the `args.index_path` path. Create a vector of three query hashes, that contain the words `"3D"`, `"protein"` and `"structure"` hashed by `std::hash`. Use the HIBF to query these words in the index with an appropiate threshold. Loop over the resulting hits and do the same as in task1: Open the candidate file, count the words, if all three query words are contained, add the count to the total word counter and output the results in the end.
 
 Documentation you'll need:
 - HIBF lib: https://github.com/seqan/hibf (note the snippet on the landing page)
@@ -155,6 +154,15 @@ Tasks 4–6 mirror tasks 1–3 one-to-one: task 4 is the naive baseline, task 5
 builds the AMQ index, task 6 queries it and only aligns the candidates.
 
 ## Task 4 — Baseline: align the query against every reference
+
+In `task4.cpp` using `task4.hpp` helper functions `parse_cmd` you should parse the command line with `parse_cmd` that no has, additionally to the `-i/input` option, a `-q/--query` option for the input query path. Create ` seqan3::sequence_file_input` on the query filepath and store the sequence from the first and only record of the file in a variable `query`. Loop over all files and open each reference file using `seqan3::sequence_file_input` again. Loop over each record in the sequence file (There can be plasmid DNA additional to the genome). For each reference sequence compute a semi global alignment using `seqan3::align_pairwise` with a `seqan3::align_cfg` config object that configures `seqan3::align_cfg::method_global` for a semi global alignment,`seqan3::align_cfg::scoring_scheme` with a `seqan3::nucleotide_scoring_scheme{}` and `seqan3::align_cfg::band_fixed_size` with `seqan3::align_cfg::lower_diagonal{-9000}` and `seqan3::align_cfg::upper_diagonal{500}`. Print the filename, reference name and alignment score for each file to the command line.
+
+Documentation you'll need:
+- [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
+- [seqan3 pairwise alignment](https://docs.seqan.de/seqan3/main_user/tutorial_pairwise_alignment.html))
+
+**Need more guidance?** Check out the step by step guide at the end
+
 
 **Starting point:** copy your `task1.cpp` to `task4.cpp`.
 
