@@ -99,6 +99,7 @@
         ".github/**": true,
         "LICENSES/**": true,
         "LICENSE.md": true,
+        ".vscode.preset/": true
     },
     "problems.decorations.enabled": false,
     "search.exclude": {
