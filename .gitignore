@@ -37,3 +37,5 @@
 
 /build/
 /.vscode/
+/data/amr/
+/data/mock_papers
