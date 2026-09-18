@@ -96,6 +96,13 @@
         "**/.git/**": true,
         "/build/**": true
     },
+    "files.exclude": {
+        ".clang-format": true,
+        ".gitignore": true,
+        ".github/**": true,
+        "LICENSES/**": true,
+        "LICENSE.md": true,
+    },
     "problems.decorations.enabled": false,
     "search.exclude": {
         "/build/**": true
