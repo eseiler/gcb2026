@@ -171,30 +171,25 @@ Parse the command line as usual. Create a `file_data` lambda function as you hav
 
 Documentation you'll need:
 - [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
-- [seqan3::kmer_hash](https://docs.seqan.de/seqan3/main_user/group__search__views.html#ga6e598d6a021868f704d39df73252974f))
-- HIBF API documentation: https://docs.seqan.de/hibf/main/index.html
+- [seqan3::views::kmer_hash](https://docs.seqan.de/seqan3/main_user/group__search__views.html#ga6e598d6a021868f704d39df73252974f))
+- [HIBF API documentation] (https://docs.seqan.de/hibf/main/index.html)
+
+**Need more guidance?** Check out the step by step guide at the end
 
 ## Task 6 — Query the index, then align only the candidates
 
-**Starting point:** copy your `task3.cpp` to `task6.cpp`.
+Write the file `task6.cpp` that uses the helper functions in `task6.hpp` for parsing the command line (`parse_cmd`) and loading an hibf (`load`).
 
-1. Build the query from the query file instead of from three literal
-   words: read `args.query_path` with `seqan3::sequence_file_input` (as in
-   task 4) and hash its sequence into k-mers with the same
-   `seqan3::views::kmer_hash(seqan3::ungapped{k})` you used in task 5 (same
-   `k`!).
-2. Replace `std::fstream` with `seqan3::sequence_file_input` for the
-   reference files, and the word-reading loop with a `for` loop over
-   records, as in task 4.
-3. Call `agent.membership_for(query_hashes, threshold)` as in task 3 —
-   pick a `threshold` that makes sense for the number of k-mers your query
-   produces (a query with hundreds of k-mers behaves very differently from
-   one with three words; experiment and see how it affects your results).
-4. For each candidate user bin, open the reference file and, for every
-   record, compute the semi-global alignment against the query exactly as
-   in task 4. Again, print the reference filename, `record.id()`, and `res.score()` to `std::cout` for every candidate (see "Interpreting alignment scores" below for how to judge them by eye).
+After parsing the command line, load the hibf and filenames from disk as you have done in task 3. Then read in the query sequence as you have done in task 4. Hash the query using the `seqan3::views::kmer_hash` with a kmer size of `20`. Query the HIBF as you have done in task 3, this time providing the hashed query and a threshold that reflects that `90%` of the hashes match. Loop over the resulting hits as you have done in task 3 and compute a semi global alignment between each reference file and the query sequence as you have done in task 4.
 
+Documentation you'll need:
+- [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
+- [seqan3::views::kmer_hash](https://docs.seqan.de/seqan3/main_user/group__search__views.html#ga6e598d6a021868f704d39df73252974f))
+- [HIBF API documentation] (https://docs.seqan.de/hibf/main/index.html)
+- [seqan3 pairwise alignment](https://docs.seqan.de/seqan3/main_user/tutorial_pairwise_alignment.html))
 ---
+
+**Need more guidance?** Check out the step by step guide at the end
 
 # Step by step task solving
 
@@ -257,13 +252,13 @@ Querying an HIBF on the mock paper data and counting words
 3. Include `#include <iostream>`, `#include <fstream>` and `#include <task3.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task3.hpp` you can see that it has the only option `-i/--index` for the index filename.
 5. Create an `seqan::hibf::hierarchical_interleaved_bloom_filter` named `hibf` without initializing it. As an example, creating a number without initialising it is done by `int a;`.
-4. Create `std::vector<std::filesystem::path>` named filenames without initializing it.
-5. Load hibf index and filenames using the load function `load(hibf, filenames, args.index_path)`.
-6. Construct a `std::vector<uint64_t>` on three input arguments: `"3D"`, `"protein"` and `"structure"` eached hashed by `std::hash` just as in task 2. A vector with three elements is for example constructed like this: `std::vector<uint64_t>{1,2,3}`.
-7. Create an hibf agent called `agent` using the memberfunction `membership_agent()` on the `hibf` object. THe type of the `agent` variable can be `auto`. Example with `auto`: `auto a = 3`, a is type `int`.
-8. Use the `agent` to query the HIBF by using the member function `agent.membership_for(query, threshold)`, passing the query vector and a appripiate numeric threshold value (e.g. `1` or `1000`). The `result` of the member function is again stored in a variable using `auto`.
-9. The result is a vector of numeric values indicating the file indices of files that likely contain the three query words. Loop ofer the `result` vector with a for loop `for (file_idx : result)`.
-10. Now you need to do the exact same analysis as you have done in task 1 for the candidate files. Follow the steps 1-8 of task 1 again or copy over the code and adapt in to this for loop.
+6. Create `std::vector<std::filesystem::path>` named filenames without initializing it.
+7. Load hibf index and filenames using the load function `load(hibf, filenames, args.index_path)`.
+8. Construct a `std::vector<uint64_t>` on three input arguments: `"3D"`, `"protein"` and `"structure"` eached hashed by `std::hash` just as in task 2. A vector with three elements is for example constructed like this: `std::vector<uint64_t>{1,2,3}`.
+9. Create an hibf agent called `agent` using the memberfunction `membership_agent()` on the `hibf` object. THe type of the `agent` variable can be `auto`. Example with `auto`: `auto a = 3`, a is type `int`.
+10. Use the `agent` to query the HIBF by using the member function `agent.membership_for(query, threshold)`, passing the query vector and a appripiate numeric threshold value (e.g. `1` or `1000`). The `result` of the member function is again stored in a variable using `auto`.
+11. The result is a vector of numeric values indicating the file indices of files that likely contain the three query words. Loop ofer the `result` vector with a for loop `for (file_idx : result)`.
+12. Now you need to do the exact same analysis as you have done in task 1 for the candidate files. Follow the steps 1-8 of task 1 again or copy over the code and adapt in to this for loop.
 
 Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task3.cpp`.
 
@@ -271,7 +266,7 @@ Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task3.cp
 
 1. Create `src/task4.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
 2. Create a `main` function like in task 1.
-4. Include `#include <iostream>` and `#include <task4.hpp>`.
+3. Include `#include <iostream>` and `#include <task4.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task4.hpp` you can see that it now has two options
    - `-i/--input` for the input directory
    - `-o/--output-index` for the index filename
@@ -303,7 +298,7 @@ Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task4.cp
 
 1. Create `src/task5.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
 2. Create a `main` function like in task 1.
-4. Include `#include <iostream>` and `#include <task5.hpp>`.
+3. Include `#include <iostream>` and `#include <task5.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task5.hpp` you can see that it now has two options
    - `-i/--input` for the input directory
    - `-o/--output-index` for the index filename
@@ -317,9 +312,25 @@ Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task4.cp
    ```
 7. Within the lambda, construct a `seqan3::sequence_file_input` named `file` on the current filename.
 8. Loop over the `record`s of the `file` as you have for example done in task 4.
-9. Within this loop create the `hashes` of type `auto` by piping `|` the `seqan3::kmer_hash` onto the records sequence (`record.sequence()`). Construct the `seqan3::kmer_hash` with an `seqan3::ungapped` shape that represent a standard kmer of size `20`.
+9. Within this loop create the `hashes` of type `auto` by piping `|` the `seqan3::views::kmer_hash` onto the records sequence (`record.sequence()`). Construct the `seqan3::views::kmer_hash` with an `seqan3::ungapped` shape that represent a standard kmer of size `20`.
 10. Loop over the `hashes` view an add each hash to the lambda iterator via `it = hash`.
 11. After the `file_data` lambda construct and store the hibf just as in task 2. Follow task 2 steps 7-10.
+
+Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task5.cpp`.
+
+## Task 6
+
+1. Create `src/task6.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+2. Create a `main` function like in task 1.
+3. Include `#include <iostream>` and `#include <task6.hpp>`.
+4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task6.hpp` you can see that it now has two options
+   - `-i/--index` for the index filename
+   - `-q/--query` for the query filename
+5. Follow task 3 steps 5-7 to load the `hibf` index and `filenames`.
+6. Follow task 4 steps 5-7 to read the `query` sequence from file.
+7. Create a `query_hashes` range of type `auto` by piping (`|`) the `seqan3::views::kmer_hash` onto the `query` sequence. Construct the `kmer_hash` with an `seqan3::ungapped` shape initialised to a size of `20`.
+8. Query the HIBF and loop over the result by following task 3 steps 9-11.
+9. Compute a semi-global alignment for each reference sequence by following task 4 steps 9-14.
 
 ## Interpreting alignment scores (rough guide)
 
