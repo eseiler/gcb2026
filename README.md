@@ -133,9 +133,9 @@ Write the file `task3.cpp` that uses the helper functions in `task3.hpp` for par
 Parse the command line with `parse_cmd`. Create an HIBF and filenames object and load them from disk given the `args.index_path` path. Create a vector of three query hashes, that contain the words `"3D"`, `"protein"` and `"structure"` hashed by `std::hash`. Use the HIBF to query these words in the index with an appropriate threshold. Loop over the resulting hits and do the same as in task 1: Open the candidate file, count the words, if all three query words are contained, add the count to the total word counter and output the results in the end.
 
 Documentation you'll need:
-- HIBF lib: https://github.com/seqan/hibf (note the snippet on the landing page)
-- HIBF API documentation: https://docs.seqan.de/hibf/main/index.html
-- `std::hash`: https://en.cppreference.com/cpp/utility/hash
+- [HIBF lib on GitHub](https://github.com/seqan/hibf) (note the snippet on the landing page)
+- [HIBF API documentation](https://docs.seqan.de/hibf/main/index.html)
+- [`std::hash`](https://en.cppreference.com/cpp/utility/hash)
 
 **Need more guidance?** Check out the step by step guide at the end
 
