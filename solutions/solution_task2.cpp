@@ -16,9 +16,9 @@ int main(int argc, char const * argv[])
     cli_args args = parse_cmd(argc, argv);
 
     // The input lambda
-    auto file_data = [&](size_t const user_bin_id, seqan::hibf::insert_iterator it)
+    auto file_data = [&](size_t const file_idx, seqan::hibf::insert_iterator it)
     {
-        std::fstream file{args.filenames[user_bin_id]};
+        std::fstream file{args.filenames[file_idx]};
 
         std::string word;
 
@@ -26,9 +26,8 @@ int main(int argc, char const * argv[])
             it = std::hash<std::string>{}(word);
     };
 
-    seqan::hibf::config config{.input_fn = file_data,                        // required
-                               .number_of_user_bins = args.filenames.size(), // required
-                               .threads = 1u};
+    seqan::hibf::config config{.input_fn = file_data,
+                               .number_of_user_bins = args.filenames.size()};
 
     // The HIBF constructor will determine a hierarchical layout for the user bins and build the filter.
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf{config};

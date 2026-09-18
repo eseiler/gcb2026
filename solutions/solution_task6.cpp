@@ -13,16 +13,16 @@
 #include <hibf/config.hpp>                                // for config, insert_iterator
 #include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
 
-#include <task6.hpp> // local header that provides parse_cmd for command line parsing
+#include <task6.hpp> // helper functions
 
 int main(int argc, char const * argv[])
 {
+    cli_args args = parse_cmd(argc, argv);
+
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf;
     std::vector<std::filesystem::path> filenames;
 
     load(hibf, filenames, "hibf.index");
-
-    cli_args args = parse_cmd(argc, argv);
 
     seqan3::sequence_file_input query_file{args.query_path};
     auto & query = (*query_file.begin()).sequence();

@@ -9,7 +9,7 @@
 #include <seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>
 #include <seqan3/io/sequence_file/input.hpp>
 
-#include <task4.hpp> // local header that provides parse_cmd for command line parsing
+#include <task4.hpp> // helper functions
 
 int main(int argc, char const * argv[])
 {

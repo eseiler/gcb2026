@@ -6,22 +6,22 @@
 #include <iostream>      // for std::cout
 
 #include <seqan3/io/sequence_file/input.hpp>
-#include <seqan3/search/views/minimiser_hash.hpp>
+#include <seqan3/search/views/kmer_hash.hpp>
 
 #include <hibf/config.hpp>                                // for config, insert_iterator
 #include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
 
-#include <task5.hpp> // local header that provides parse_cmd for command line parsing
+#include <task5.hpp> // helper functions
 
-// Build a Hierarchical Interleaved Bloom Filter (HIBF) on the Paper Data
+// Build a Hierarchical Interleaved Bloom Filter (HIBF) on the RefSeq data
 int main(int argc, char const * argv[])
 {
     cli_args args = parse_cmd(argc, argv);
 
     // The input lambda
-    auto file_data = [&](size_t const user_bin_id, seqan::hibf::insert_iterator it)
+    auto file_data = [&](size_t const file_idx, seqan::hibf::insert_iterator it)
     {
-        seqan3::sequence_file_input file{args.filenames[user_bin_id]};
+        seqan3::sequence_file_input file{args.filenames[file_idx]};
 
         for (auto && record : file)
         {
@@ -30,12 +30,11 @@ int main(int argc, char const * argv[])
         }
     };
 
-    seqan::hibf::config config{.input_fn = file_data,                        // required
-                               .number_of_user_bins = args.filenames.size(), // required
-                               .threads = 1u};
+    seqan::hibf::config config{.input_fn = file_data,
+                               .number_of_user_bins = args.filenames.size()};
 
     // The HIBF constructor will determine a hierarchical layout for the user bins and build the filter.
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf{config};
 
-    store(hibf, args.filenames, "hibf.index")
+    store(hibf, args.filenames, "hibf.index");
 }
