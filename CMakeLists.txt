@@ -8,7 +8,7 @@ cmake_minimum_required (VERSION 3.25)
 project (gcb2026
          LANGUAGES CXX
          VERSION 1.0.0
-         DESCRIPTION "My application description"
+         DESCRIPTION "GCB2026 Workshop"
 )
 
 # This allows including `*.cmake` files from the `cmake` directory without specifying the full path.
