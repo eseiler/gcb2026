@@ -1,19 +1,13 @@
 {
     "[cpp]": {
-        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.defaultFormatter": "ebextensions.active-clang-format",
         "editor.formatOnSave": true
     },
-    "C_Cpp.codeAnalysis.runAutomatically": false,
-    "C_Cpp.copilotHover": "disabled",
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-    "C_Cpp.default.cppStandard": "c++23",
-    "C_Cpp.errorSquiggles": "disabled",
-    "C_Cpp.formatting": "clangFormat",
-    "C_Cpp.intelliSenseCacheSize": 0,
     "clang-format.executable": "clang-format-23",
     "cmake.buildDirectory": "${workspaceRoot}/build/${buildKitVendor}-${buildKitVersionMajor}-${buildType}",
     "cmake.buildTask": true,
     "cmake.configureSettings": {
+        "CMAKE_CXX_FLAGS": "-stdlib=libc++",
         "CMAKE_CXX_FLAGS_DEBUG": "-g -O0 -fno-omit-frame-pointer",
         "CMAKE_CXX_FLAGS_RELEASE": "-O3 -march=native -DNDEBUG"
     },
@@ -68,6 +62,9 @@
         "ctest": {
             "statusBarVisibility": "hidden"
         },
+        "debug": {
+            "statusBarVisibility": "visible"
+        },
         "launchTarget": {
             "statusBarVisibility": "visible"
         },
@@ -111,9 +108,16 @@
         {
             "alignment": "left",
             "command": "cmake.cleanConfigure",
-            "priority": 0,
+            "priority": 1,
             "text": "$(refresh) Clean Reconfigure",
             "tooltip": "Delete Cache and Reconfigure"
+        },
+        {
+            "alignment": "left",
+            "command": "cmake.debugTarget",
+            "priority": 0,
+            "text": "$(bug) Debug",
+            "tooltip": "Launch Target with Debugger"
         }
     ],
     "terminal.integrated.scrollback": 500000,
@@ -125,5 +129,9 @@
     "workbench.editor.empty.hint": "hidden",
     "workbench.editor.tabSizing": "shrink",
     "workbench.list.multiSelectModifier": "alt",
-    "workbench.startupEditor": "newUntitledFile"
+    "workbench.startupEditor": "newUntitledFile",
+    "nextflow.telemetry.enabled": false,
+    "cmake.automaticReconfigure": true,
+    "cmake.configureOnEdit": false,
+    "cmake.configureOnOpen": false
 }

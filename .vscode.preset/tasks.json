@@ -17,10 +17,10 @@
                 "showReuseMessage": true,
                 "clear": true
             },
-            "problemMatcher": {
-                "base": "$gcc",
-                "fileLocation": "absolute"
-            },
+            // "problemMatcher": {
+            //     "base": "$gcc",
+            //     "fileLocation": "absolute"
+            // },
             "options": {
                 "environment": {
                     "CMAKE_COLOR_DIAGNOSTICS": "1",
