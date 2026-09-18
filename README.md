@@ -115,26 +115,14 @@ compare against once your C++ version compiles and runs.
 
 ## Task 2 — Build an AMQ index over all files
 
-**Starting point:** copy `src/gcb_task2_scaffold.cpp` to `src/task2.cpp`.
+Write the file `task2.cpp` that uses the helper functions in `task2.hpp` for parsing the command line (`parse_cmd`) and storing an hibf (`store`). Create an HIBF on the same files as before, supplying only required fields to the HIBF config object. The input to the HIBF is a lambda function, that should open a file and hash each word in the file using `std::hash`. In the end, store the index using the `store` function from `task2.hpp` and use the paremeter `args.index_path` parsed from the command line as the output filename.
 
-`task2.cpp` should:
-1. Get `args.filenames` via `parse_cmd`.
-2. Write an `input_fn` lambda with the signature
-   `[&](size_t const user_bin_id, seqan::hibf::insert_iterator it)`. Inside
-   it, open `args.filenames[user_bin_id]`, read the file word by word, and
-   for each word do `it = std::hash<std::string>{}(word);` — this inserts
-   the word's hash into that file's user bin.
-3. Build a `seqan::hibf::config` with:
-   - `.input_fn = <your lambda>` (required),
-   - `.number_of_user_bins = args.filenames.size()` (required),
-   - `.threads = 1u`.
-4. Construct the filter: `seqan::hibf::hierarchical_interleaved_bloom_filter hibf{config};`.
-5. Serialize **both** `hibf` and `args.filenames` to disk with a
-   `cereal::BinaryOutputArchive` (you need the filenames again in task 3 to
-   turn a matched user-bin index back into a path).
+Documentation you'll need:
+- HIBF lib: https://github.com/seqan/hibf (note the snippet on the landing page)
+- HIBF API documentation: https://docs.seqan.de/hibf/main/index.html
+- `std::hash`: https://en.cppreference.com/cpp/utility/hash
 
-Needed includes: `<cereal/archives/binary.hpp>`, `<hibf/config.hpp>`,
-`<hibf/hierarchical_interleaved_bloom_filter.hpp>`.
+**Need more guidance?** Check out the step by step guide at the end
 
 ## Task 3 — Query the index, then verify only the candidates
 
@@ -264,6 +252,37 @@ Then run your program:
 ```
 Tip: `src/task1.py` implements the exact same logic in Python — useful to
 compare against once your C++ version compiles and runs.
+
+## Task 2
+
+Building an HIBF on the mock paper data
+
+1. Create `src/task2.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+2. Create a `main` function like in task 1.
+3. Include `#include <iostream>`, `#include <fstream>` and `#include <task2.hpp>`.
+4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task2.hpp` you can see that it now has two options
+   - `-i/--input` for the input directory
+   - `-o/--output-index` for the index filename
+5. Copy over this lambda signiture
+   ```
+       auto file_data = [&](size_t const file_idx, seqan::hibf::insert_iterator it)
+    {
+        // todo
+    };
+   ```
+6. Within the `file_data lambda`
+   1. Open a `std::fstream` named `file` that is constructed with the filename at position `file_idx` in the vector `args.filenames`. A vector is accessed via `[]`.
+   2. Create a `std::string` named `word`.
+   3. Create a while loop just as in task 1 that loops over the words in `file` and for each word assigns its hash to the iterator like this: `it = std::hash<std::string>{}(word)`.
+7. Add includes: `<hibf/config.hpp>` and
+`<hibf/hierarchical_interleaved_bloom_filter.hpp>`.
+8. Create a `seqan::hibf::config` config object named `config` that is initialized using designated initialisers. Set `.input_fn` to `file_data` and `.number_of_user_bins` to the number of files (hint: the size of a vector `v` can be accessed with `v.size()`).
+9. Construct the filter: `seqan::hibf::hierarchical_interleaved_bloom_filter hibf` initialized with the config object from step 7.
+10. Store **both** `hibf` and `args.filenames` to disk using the store function `store(hibf, args.filenames, args.index_path)`.
+   `cereal::BinaryOutputArchive` (you need the filenames again in task 3 to
+   turn a matched user-bin index back into a path).
+
+Need more help yet? Use the scaffold of task two in `scaffolds/scaffold_task2.cpp`.
 
 ## Interpreting alignment scores (rough guide)
 
