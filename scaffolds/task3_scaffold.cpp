@@ -10,13 +10,15 @@
 
 #include <task3.hpp> // helper functions
 
-int main()
+int main(int argc, char const * argv[])
 {
+    cli_args args = parse_cmd(argc, argv); // args contains index_path
+
     // create objects that are filled when loaded
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf;
     std::vector<std::filesystem::path> filenames;
 
-    load(XXX/*The HIBF objext*/, XXX/*The filenames object*/, XXX/*The index file name*/);
+    load(XXX/*The HIBF objext*/, XXX/*The filenames object*/, args.index_path);
 
     // The query contains the three words hashed with std::hash
     std::vector<uint64_t> query{std::hash<std::string>{}("protein"),

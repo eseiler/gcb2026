@@ -17,6 +17,7 @@
 struct cli_args
 {
     std::filesystem::path input_path{};
+    std::filesystem::path index_path{};
     std::vector<std::filesystem::path> filenames;
 };
 
@@ -49,6 +50,14 @@ cli_args parse_cmd(int argc, char const * argv[])
     parser.add_option(
         args.input_path,
         sharg::config{.short_id = 'i', .long_id = "input", .description = "path to files", .required = true});
+
+    // add CMD option '-o/--output' that sets the parameter args.index_path
+    parser.add_option(
+        args.index_path,
+        sharg::config{.short_id = 'o',
+                      .long_id = "output-index",
+                      .description = "path to write the HIBF index file to",
+                      .required = true});
 
     try // go and let the parser parse the command line
     {

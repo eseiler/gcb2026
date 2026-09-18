@@ -37,5 +37,5 @@ int main(int argc, char const * argv[])
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf{XXX};
 
     // store the HIBF on disk
-    store(XXX/*The HIBF objext*/, XXX/*The filenames object*/, XXX/*A file name*/);
+    store(XXX/*The HIBF objext*/, XXX/*The filenames object*/, args.index_path);
 }

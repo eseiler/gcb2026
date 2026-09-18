@@ -36,5 +36,5 @@ int main(int argc, char const * argv[])
     // The HIBF constructor will determine a hierarchical layout for the user bins and build the filter.
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf{config};
 
-    store(hibf, args.filenames, "hibf.index");
+    store(hibf, args.filenames, args.index_path);
 }

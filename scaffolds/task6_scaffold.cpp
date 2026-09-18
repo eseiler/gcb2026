@@ -22,7 +22,7 @@ int main(int argc, char const * argv[])
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf;
     std::vector<std::filesystem::path> filenames;
 
-    load(XXX/*The HIBF objext*/, XXX/*The filenames object*/, XXX/*The index file name*/);
+    load(XXX/*The HIBF objext*/, XXX/*The filenames object*/, args.index_path);
 
     XXX // create a query_file with a seqan3::sequence_file_input from the file path args.query_path
     auto & query = (*query_file.begin()).sequence(); // reads in first record

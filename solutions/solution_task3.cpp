@@ -10,12 +10,14 @@
 
 #include <task3.hpp> // helper functions
 
-int main()
+int main(int argc, char const * argv[])
 {
+    cli_args args = parse_cmd(argc, argv);
+
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf;
     std::vector<std::filesystem::path> filenames;
 
-    load(hibf, filenames, "hibf.index");
+    load(hibf, filenames, args.index_path);
 
     std::vector<uint64_t> query{std::hash<std::string>{}("protein"),
                                 std::hash<std::string>{}("3D"),
