@@ -3,6 +3,13 @@
 // SPDX-License-Identifier: CC0-1.0
 
 #include <iostream>
+#include <filesystem>         // for std::filesystem(::path)
+#include <fstream>            // for std::ofstream
+
+#include <cereal/archives/binary.hpp>                     // for BinaryOutputArchive
+#include <cereal/types/vector.hpp>                        // IWYU pragma: keep
+#include <hibf/cereal/path.hpp>                           // IWYU pragma: keep
+#include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
 
 #include <sharg/parser.hpp> // include the SeqAn sharg parser https://github.com/seqan/sharg-parsers
 
@@ -59,4 +66,24 @@ cli_args parse_cmd(int argc, char const * argv[])
         args.filenames.push_back(entry.path());
 
     return args;
+}
+
+/*!\brief Serialises an HIBF together with its associated filenames to disk.
+ * \param hibf The hierarchical_interleaved_bloom_filter to serialise.
+ * \param filenames The filenames the HIBF's user bins were built from.
+ * \param name The path of the file to write the archive to.
+ * \details
+ *
+ * Opens a binary std::ofstream at `name` and writes `filenames` followed by `hibf`
+ * via a cereal::BinaryOutputArchive. The same order (filenames, then hibf) must be
+ * used when reading the archive back.
+ */
+void store(seqan::hibf::hierarchical_interleaved_bloom_filter const & hibf,
+           std::vector<std::filesystem::path> const & filenames,
+           std::filesystem::path const & name)
+{
+    std::ofstream fout{name, std::ios::binary};
+    cereal::BinaryOutputArchive oarchive{fout};
+    oarchive(filenames);
+    oarchive(hibf);
 }

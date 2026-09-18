@@ -12,25 +12,23 @@
 
 int main()
 {
+    // create objects that are filled when loaded
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf;
     std::vector<std::filesystem::path> filenames;
 
-    load(hibf, filenames, "hibf.index");
+    store(XXX/*The HIBF objext*/, XXX/*The filenames object*/, XXX/*The index file name*/);
 
+    // The query contains the three words hashed with std::hash
     std::vector<uint64_t> query{std::hash<std::string>{}("protein"),
                                 std::hash<std::string>{}("3D"),
                                 std::hash<std::string>{}("structure")};
 
-    auto agent = hibf.membership_agent();
-    auto & result = agent.membership_for(query, 3u);
+    auto agent = XXX/*get membership_agent from hibf*/;
+    auto & result = agent.membership_for(XXX/*The query objext*/, XXX/*A threshold*/);
 
-    unsigned paper_counter{};
-    unsigned word_count{};
     for (uint64_t hit_user_bin : result)
     {
-        unsigned counter{};
-
-        std::fstream file{filenames[hit_user_bin]};
+        XXX // open a std::fstream on the file at position filenames[hit_user_bin]
 
         if (!file.is_open())
         {
@@ -38,28 +36,6 @@ int main()
             return 1;
         }
 
-        std::string word;
-
-        bool text_protein{false};
-        bool text_3D{false};
-        bool text_structure{false};
-        while (file >> word)
-        {
-            counter++;
-            if (word == "protein")
-                text_protein = true;
-            if (word == "3D")
-                text_3D = true;
-            if (word == "structure")
-                text_structure = true;
-        }
-
-        if (text_protein && text_3D && text_structure)
-        {
-            paper_counter++;
-            word_count += counter;
-        }
+        XXX // copy over your code from task 1 to count the words in each file
     }
-    std::cout << "DONE -- " << paper_counter << "/" << hibf.number_of_user_bins
-              << " files. Total of (words): " << word_count << std::endl;
 }

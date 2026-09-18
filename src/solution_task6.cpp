@@ -2,40 +2,30 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <filesystem>         // for std::filesystem(::path)
 #include <fstream>            // for fstream
 #include <iostream>           // for std::cout
-#include <solution_task4.hpp> // local header that provides parse_cmd for command line parsing
-#include <string>             // for std::string
 
 #include <seqan3/alignment/pairwise/align_pairwise.hpp>
 #include <seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>
 #include <seqan3/io/sequence_file/input.hpp>
 #include <seqan3/search/views/kmer_hash.hpp>
-#include <seqan3/search/views/minimiser_hash.hpp>
 
-#include <cereal/archives/binary.hpp>                     // for BinaryOutputArchive
-#include <cereal/types/vector.hpp>                        // IWYU pragma: keep
-#include <hibf/cereal/path.hpp>                           // IWYU pragma: keep
 #include <hibf/config.hpp>                                // for config, insert_iterator
 #include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
 
+#include <task6.hpp> // local header that provides parse_cmd for command line parsing
+
 int main(int argc, char const * argv[])
 {
-    std::vector<std::filesystem::path> filenames;
     seqan::hibf::hierarchical_interleaved_bloom_filter hibf;
-    std::ifstream fout{"test.hibf"};
-    cereal::BinaryInputArchive iarchive{fout};
-    iarchive(filenames);
-    iarchive(hibf);
+    std::vector<std::filesystem::path> filenames;
+
+    load(hibf, filenames, "hibf.index");
 
     cli_args args = parse_cmd(argc, argv);
 
     seqan3::sequence_file_input query_file{args.query_path};
     auto & query = (*query_file.begin()).sequence();
-    // auto query_hashes =
-    //     query
-    //     | seqan3::views::minimiser_hash(seqan3::shape{seqan3::ungapped{20}}, seqan3::window_size{20}, seqan3::seed{0});
     auto query_hashes = query | seqan3::views::kmer_hash(seqan3::ungapped{20});
     size_t const threshold = static_cast<size_t>((query.size() - 20 + 1) * 0.9);
 
@@ -58,7 +48,7 @@ int main(int argc, char const * argv[])
                                                            seqan3::align_cfg::free_end_gaps_sequence1_trailing{true},
                                                            seqan3::align_cfg::free_end_gaps_sequence2_trailing{false}}
                         | seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}}
-                        | seqan3::align_cfg::band_fixed_size{seqan3::align_cfg::lower_diagonal{-500},
+                        | seqan3::align_cfg::band_fixed_size{seqan3::align_cfg::lower_diagonal{-9000},
                                                              seqan3::align_cfg::upper_diagonal{500}};
 
             // Invoke the pairwise alignment which returns a lazy range over alignment results.
@@ -69,9 +59,3 @@ int main(int argc, char const * argv[])
         }
     }
 }
-
-// Band 500; 90% threshold
-//                 Hit files   alignments  Time[s]
-// Align           154         523         12.8
-// AMQ-minimizer   54          347         8.1
-// AMQ-kmer        26          179         5.5

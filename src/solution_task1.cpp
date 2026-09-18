@@ -12,19 +12,26 @@ int main(int argc, char const * argv[])
 {
     cli_args args = parse_cmd(argc, argv); // args contains filenames
 
-    unsigned file_counter{};
-    unsigned protein_structure_counter{};
-    unsigned word_count{};
+    unsigned file_counter{};     // counts all files
+    unsigned paper_counter{};    // counts files that contain 3D,protein,structure
+    unsigned total_word_count{}; // counts the words for files that contain 3D,protein,structure
 
     for (std::filesystem::path filename : args.filenames)
     {
         std::fstream file{filename};
 
-        std::string word;
+        if (!file.is_open())
+        {
+            std::cout << "Could not open file\n";
+            return 1;
+        }
+
         unsigned counter{0};
         bool text_protein{false};
         bool text_3D{false};
         bool text_structure{false};
+
+        std::string word;
 
         while (file >> word)
         {
@@ -39,13 +46,13 @@ int main(int argc, char const * argv[])
 
         if (text_protein && text_3D && text_structure)
         {
-            protein_structure_counter++;
-            word_count += counter;
+            paper_counter++;
+            total_word_count += counter;
         }
 
         ++file_counter;
     }
 
-    std::cout << "DONE -- " << protein_structure_counter << "/" << file_counter << " files. Total of (words) "
-              << word_count << std::endl;
+    std::cout << "DONE -- " << paper_counter << "/" << file_counter << " files. Total of (words) "
+              << total_word_count << std::endl;
 }

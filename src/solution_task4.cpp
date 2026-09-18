@@ -2,15 +2,14 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <filesystem>         // for std::filesystem(::path)
 #include <fstream>            // for fstream
 #include <iostream>           // for std::cout
-#include <solution_task4.hpp> // local header that provides parse_cmd for command line parsing
-#include <string>             // for std::string
 
 #include <seqan3/alignment/pairwise/align_pairwise.hpp>
 #include <seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>
 #include <seqan3/io/sequence_file/input.hpp>
+
+#include <task4.hpp> // local header that provides parse_cmd for command line parsing
 
 int main(int argc, char const * argv[])
 {
@@ -34,7 +33,7 @@ int main(int argc, char const * argv[])
                                                            seqan3::align_cfg::free_end_gaps_sequence1_trailing{true},
                                                            seqan3::align_cfg::free_end_gaps_sequence2_trailing{false}}
                         | seqan3::align_cfg::scoring_scheme{seqan3::nucleotide_scoring_scheme{}}
-                        | seqan3::align_cfg::band_fixed_size{seqan3::align_cfg::lower_diagonal{-500},
+                        | seqan3::align_cfg::band_fixed_size{seqan3::align_cfg::lower_diagonal{-9000},
                                                              seqan3::align_cfg::upper_diagonal{500}};
 
             // Invoke the pairwise alignment which returns a lazy range over alignment results.
