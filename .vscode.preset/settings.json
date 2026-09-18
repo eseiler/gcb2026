@@ -1,0 +1,122 @@
+{
+    "[cpp]": {
+        "editor.defaultFormatter": "xaver.clang-format",
+        "editor.formatOnSave": true
+    },
+    "C_Cpp.codeAnalysis.runAutomatically": false,
+    "C_Cpp.copilotHover": "disabled",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.cppStandard": "c++23",
+    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.intelliSenseCacheSize": 0,
+    "clang-format.executable": "clang-format-23",
+    "cmake.buildDirectory": "${workspaceRoot}/build/${buildKitVendor}-${buildKitVersionMajor}-${buildType}",
+    "cmake.buildTask": true,
+    "cmake.configureSettings": {
+        "CMAKE_CXX_FLAGS_DEBUG": "-g -O0 -fno-omit-frame-pointer",
+        "CMAKE_CXX_FLAGS_RELEASE": "-O3 -march=native -DNDEBUG"
+    },
+    "cmake.ctest.parallelJobs": 0,
+    "cmake.defaultVariants": {
+        "buildType": {
+            "choices": {
+                "debug": {
+                    "buildType": "Debug",
+                    "long": "Disable optimizations - include debug information.",
+                    "short": "Debug"
+                },
+                "minsize": {
+                    "buildType": "MinSizeRel",
+                    "long": "Optimize for smallest binary size - exclude debug information.",
+                    "short": "MinSizeRel"
+                },
+                "reldeb": {
+                    "buildType": "RelWithDebInfo",
+                    "long": "Optimize for speed - include debug information.",
+                    "short": "RelWithDebInfo"
+                },
+                "release": {
+                    "buildType": "Release",
+                    "long": "Optimize for speed - exclude debug information.",
+                    "short": "Release"
+                }
+            },
+            "default": "debug",
+            "description": "The build type."
+        }
+    },
+    "cmake.environment": {
+        "CLICOLOR_FORCE": "1",
+        "CMAKE_COLOR_DIAGNOSTICS": "1"
+    },
+    "cmake.generator": "Unix Makefiles",
+    "cmake.debugConfig": {
+        "type": "lldb",
+        "request": "launch"
+    },
+    "cmake.options.advanced": {
+        "build": {
+            "statusBarVisibility": "visible"
+        },
+        "buildTarget": {
+            "statusBarVisibility": "visible"
+        },
+        "cpack": {
+            "statusBarVisibility": "hidden"
+        },
+        "ctest": {
+            "statusBarVisibility": "hidden"
+        },
+        "launchTarget": {
+            "statusBarVisibility": "visible"
+        },
+        "workflow": {
+            "statusBarVisibility": "hidden"
+        }
+    },
+    "cmake.options.statusBarVisibility": "compact",
+    "cmake.parallelJobs": 0,
+    "cmake.revealLog": "never",
+    "cmake.sourceDirectory": "${workspaceRoot}",
+    "cmake.useCMakePresets": "never",
+    "editor.maxTokenizationLineLength": 500,
+    "editor.renderWhitespace": "all",
+    "editor.rulers": [
+        80,
+        120
+    ],
+    "editor.wordWrapColumn": 120,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 300,
+    "files.insertFinalNewline": true,
+    "files.participants.timeout": 0,
+    "files.trimTrailingWhitespace": true,
+    "files.watcherExclude": {
+        "**/.git/**": true,
+        "/build/**": true
+    },
+    "problems.decorations.enabled": false,
+    "search.exclude": {
+        "/build/**": true
+    },
+    "statusbar_command.commands": [
+        {
+            "alignment": "left",
+            "command": "cmake.cleanConfigure",
+            "priority": 0,
+            "text": "$(refresh) Clean Reconfigure",
+            "tooltip": "Delete Cache and Reconfigure"
+        }
+    ],
+    "terminal.integrated.scrollback": 500000,
+    "terminal.integrated.smoothScrolling": true,
+    "workbench.colorCustomizations": {
+        "editorRuler.foreground": "#3c3c3cd2"
+    },
+    "workbench.colorTheme": "Visual Studio Dark",
+    "workbench.editor.empty.hint": "hidden",
+    "workbench.editor.tabSizing": "shrink",
+    "workbench.list.multiSelectModifier": "alt",
+    "workbench.startupEditor": "newUntitledFile"
+}
