@@ -148,12 +148,14 @@ Report your timings
 | task1.cpp  | mock paper    |            |
 | task2.cpp  | mock paper    |            |
 | task3.cpp  | mock paper    |            |
-|------------|---------------|------------|
+|    <hr>    |     <hr>      |   <hr>     |
 | task1.cpp  | mock paper 2  |            |
 | task2.cpp  | mock paper 2  |            |
 | task3.cpp  | mock paper 2  |            |
 
 ---
+
+Discuss the timings with regard to the efficiency of an Approximate Membership Query data structure as a prefilter.
 
 # Part 2 — Read mapper with AMQ
 
@@ -372,7 +374,4 @@ window in the reference: `score = -(mismatches + indel_bases)`, max `0`.
 | −1600 to −400 | 80–95% | good, likely true positive |
 | −3200 to −1600 | 60–80% | marginal, scrutinize |
 | < −3200 | <60% | noise floor (random background ≈ −0.75·L_query) |
-
-Caveats: `N`/ambiguous IUPAC bases score as hard mismatches, not neutral, so
-assembly gaps inflate the apparent divergence.
 
