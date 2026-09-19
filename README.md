@@ -139,6 +139,20 @@ Documentation you'll need:
 
 **Need more guidance?** Check out the step by step guide at the end
 
+## Benchmarking session 1
+
+Report your timings
+
+| Executable | data set      | time (sec) |
+|------------|---------------|------------|
+| task1.cpp  | mock paper    |            |
+| task2.cpp  | mock paper    |            |
+| task3.cpp  | mock paper    |            |
+|------------|---------------|------------|
+| task1.cpp  | mock paper 2  |            |
+| task2.cpp  | mock paper 2  |            |
+| task3.cpp  | mock paper 2  |            |
+
 ---
 
 # Part 2 — Read mapper with AMQ
@@ -189,6 +203,16 @@ Documentation you'll need:
 - [seqan3 pairwise alignment](https://docs.seqan.de/seqan3/main_user/tutorial_pairwise_alignment.html)
 
 **Need more guidance?** Check out the step by step guide at the end
+
+## Benchmarking session 2
+
+Report your timings
+
+| Executable | data set      | time (sec) |
+|------------|---------------|------------|
+| task4.cpp  | RefSeq        |            |
+| task5.cpp  | RefSeq        |            |
+| task6.cpp  | RefSeq        |            |
 
 ---
 
