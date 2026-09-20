@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <fstream>  // for fstream
-#include <iostream> // for std::cout
+#include <fstream> // for fstream
+#include <print>   // for std::println
 
 #include <hibf/config.hpp>                                // for config, insert_iterator
 #include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter

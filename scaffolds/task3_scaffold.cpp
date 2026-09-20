@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 #include <fstream>       // for fstream
-#include <iostream>      // for std::cout
+#include <print>         // for std::println
 
 #include <hibf/config.hpp>                                // for config, insert_iterator
 #include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
@@ -34,7 +34,7 @@ int main(int argc, char const * argv[])
 
         if (!file.is_open())
         {
-            std::cout << "Could not open file\n";
+            std::println("Could not open file");
             return 1;
         }
 

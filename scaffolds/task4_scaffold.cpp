@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>           // for std::cout
+#include <print>              // for std::println
 
 #include <seqan3/alignment/pairwise/align_pairwise.hpp>
 #include <seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>
@@ -38,7 +38,7 @@ int main(int argc, char const * argv[])
             auto results = seqan3::align_pairwise(std::tie(record.sequence(), query), config);
             auto & res = *results.begin(); // first and only alignment result
 
-            XXX // print out filename, reference sequence name and score
+            XXX // print out filename (via filename.string()), reference sequence name and score
         }
     }
 }

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: CC0-1.0
 
 #include <fstream>       // for fstream
-#include <iostream>      // for std::cout
+#include <print>         // for std::println
 
 #include <hibf/config.hpp>                                // for config, insert_iterator
 #include <hibf/hierarchical_interleaved_bloom_filter.hpp> // for hierarchical_interleaved_bloom_filter
@@ -36,7 +36,7 @@ int main(int argc, char const * argv[])
 
         if (!file.is_open())
         {
-            std::cout << "Could not open file\n";
+            std::println("Could not open file");
             return 1;
         }
 
@@ -62,6 +62,5 @@ int main(int argc, char const * argv[])
             word_count += counter;
         }
     }
-    std::cout << "DONE -- " << paper_counter << "/" << hibf.number_of_user_bins
-              << " files. Total of (words): " << word_count << std::endl;
+    std::println("DONE -- {}/{} files. Total of (words): {}", paper_counter, hibf.number_of_user_bins, word_count);
 }

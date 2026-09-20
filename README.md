@@ -231,7 +231,7 @@ If you haven't been coding the scaffold during the workshop with us, copy over `
 5. **Within the while loop**, create an if clause for each query word (`"3D"`, `"protein"` and `"structure"`) checking if the variable `word` equals the query word and if so, set the respective boolean to true (e.g. `if (word == "foo") text_foo = true;`).
 6. **After the while loop**, check with an if clause if all three booleans from step 3 are set to true and if so, increase `paper_counter` by one and add `word_counter` to `total_word_count`.
 7. **After the while loop**, increase `file_counter` by one.
-8. **After the for loop**, print out all counters using `std::cout`, e.g. `std::cout << "done: " << paper_counter << "/" << file_counter << " files, total words: " << total_word_count;`.
+8. **After the for loop**, print out all counters using `std::println`, e.g. `std::println("done: {}/{} files, total words: {}", paper_counter, file_counter, total_word_count);`. Each `{}` in the format string is replaced by the next argument.
 
 Then run your program:
 
@@ -247,7 +247,7 @@ Building an HIBF on the mock paper data
 
 1. Create `src/task2.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
 2. Create a `main` function like in task 1.
-3. Include `#include <iostream>`, `#include <fstream>` and `#include <task2.hpp>`.
+3. Include `#include <fstream>`, `#include <print>` and `#include <task2.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task2.hpp` you can see that it now has two options
    - `-i/--input` for the input directory
    - `-o/--output-index` for the index filename
@@ -276,7 +276,7 @@ Querying an HIBF on the mock paper data and counting words
 
 1. Create `src/task3.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
 2. Create a `main` function like in task 1.
-3. Include `#include <iostream>`, `#include <fstream>` and `#include <task3.hpp>`.
+3. Include `#include <fstream>`, `#include <print>` and `#include <task3.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task3.hpp` you can see that it has the only option `-i/--index` for the index filename.
 5. Create a `seqan::hibf::hierarchical_interleaved_bloom_filter` named `hibf` without initialising it. As an example, creating a number without initialising it is done by `int a;`.
 6. Create `std::vector<std::filesystem::path>` named filenames without initialising it.
@@ -293,13 +293,13 @@ Need more help yet? Use the scaffold `scaffolds/task3_scaffold.cpp`.
 
 1. Create `src/task4.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
 2. Create a `main` function like in task 1.
-3. Include `#include <iostream>` and `#include <task4.hpp>`.
+3. Include `#include <print>` and `#include <task4.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task4.hpp` you can see that it now has two options
    - `-i/--input` for the input directory
    - `-q/--query` for the query filename
 5. Include `<seqan3/io/sequence_file/input.hpp>`.
 6. Construct a `seqan3::sequence_file_input` file named `query_file` given the query path `args.query_path`. ([`sequence_file_input` docs](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html))
-7. Retrieve the query sequence of the first and only record like this: `auto & query = query_file.begin()->sequence()`. Explanation: `query_file.begin()` gives an iterator to the query_file range. `->` gives access to the member function of the object pointed to by the iterator and `sequence()` gives you the sequence of the record.
+7. Retrieve the query sequence of the first and only record like this: `auto & query = (*query_file.begin()).sequence()`. Explanation: `query_file.begin()` gives an iterator to the query_file range. `*` dereferences the iterator, giving you the first record, and `sequence()` gives you the sequence of the record.
 8. Loop over the filenames in `args.filenames` as you have done in task 1.
 9. Within the for loop, construct a `seqan3::sequence_file_input` named `reference_file` on the current filename.
 10. Loop over the records of the `reference_file` via `for (auto && record : reference_file)`.
@@ -317,7 +317,7 @@ Need more help yet? Use the scaffold `scaffolds/task3_scaffold.cpp`.
   ```
 12. Then, invoke the pairwise alignment which returns a lazy range over alignment results with `auto result_range = seqan3::align_pairwise(std::tie(record.sequence(), query), config)`.
 13. Given the `result_range` range, acquire its start iterator with the member function `begin()` and directly dereference this iterator using `*` to get the `alignment_result` of type `auto &`.
-14. Print out the current `filename`, the reference name via the member function `id()` of the `record` and the score of the alignment via `alignment_result.score()`.
+14. Print out the current `filename`, the reference name via the member function `id()` of the `record` and the score of the alignment via `alignment_result.score()`, e.g. `std::println("{}:{}\tscore:{}", filename.string(), record.id(), alignment_result.score());`. Note that a `std::filesystem::path` cannot be printed directly with `std::println`; convert it with `.string()` first.
 
 Need more help yet? Use the scaffold `scaffolds/task4_scaffold.cpp`.
 
@@ -325,7 +325,7 @@ Need more help yet? Use the scaffold `scaffolds/task4_scaffold.cpp`.
 
 1. Create `src/task5.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
 2. Create a `main` function like in task 1.
-3. Include `#include <iostream>` and `#include <task5.hpp>`.
+3. Include `#include <print>` and `#include <task5.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task5.hpp` you can see that it now has two options
    - `-i/--input` for the input directory
    - `-o/--output-index` for the index filename
@@ -349,7 +349,7 @@ Need more help yet? Use the scaffold `scaffolds/task5_scaffold.cpp`.
 
 1. Create `src/task6.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
 2. Create a `main` function like in task 1.
-3. Include `#include <iostream>` and `#include <task6.hpp>`.
+3. Include `#include <print>` and `#include <task6.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task6.hpp` you can see that it now has two options
    - `-i/--index` for the index filename
    - `-q/--query` for the query filename
