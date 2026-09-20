@@ -2,8 +2,9 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>           // for std::cout
+#include <cstdio>             // for stderr
 #include <filesystem>         // for std::filesystem(::path)
+#include <print>              // for std::println
 
 #include <sharg/parser.hpp> // include the SeqAn sharg parser https://github.com/seqan/sharg-parsers
 
@@ -50,7 +51,7 @@ cli_args parse_cmd(int argc, char const * argv[])
     }
     catch (sharg::parser_error const & ext)
     {
-        std::cerr << "[COMMAND LINE INPUT ERROR] " << ext.what() << std::endl;
+        std::println(stderr, "[COMMAND LINE INPUT ERROR] {}", ext.what());
         return args;
     }
 

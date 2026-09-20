@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>           // for std::cout
+#include <print>              // for std::println
 
 #include <seqan3/alignment/pairwise/align_pairwise.hpp>
 #include <seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>
@@ -32,7 +32,7 @@ int main(int argc, char const * argv[])
     auto agent = XXX/*get membership_agent from hibf*/;
     auto & result = agent.membership_for(XXX/*The query objext*/, threshold);
 
-    std::cout << "There are " << result.size() << " hits" << std::endl;
+    std::println("There are {} hits", result.size());
 
     for (uint64_t hit_user_bin : result)
     {
@@ -55,7 +55,7 @@ int main(int argc, char const * argv[])
             auto results = seqan3::align_pairwise(std::tie(record.sequence(), query), config);
             auto & res = *results.begin(); // first and only alignment result
 
-            XXX // print out filename, reference sequence name and score
+            XXX // print out filename (via filenames[hit_user_bin].string()), reference sequence name and score
         }
     }
 }

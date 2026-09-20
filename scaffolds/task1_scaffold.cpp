@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2016-2025 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>
 #include <fstream>
+#include <print>
 
 #include <task1.hpp> // includes helper functions
 
@@ -17,7 +17,7 @@ int main(int argc, char const * argv[])
 
         if (!file.is_open())
         {
-            std::cout << "Could not open file\n";
+            std::println("Could not open file");
             return 1;
         }
 
@@ -29,5 +29,5 @@ int main(int argc, char const * argv[])
         }
     }
 
-    std::cout << "DONE " << std::endl;
+    std::println("DONE");
 }

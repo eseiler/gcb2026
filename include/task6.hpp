@@ -2,9 +2,10 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>
+#include <cstdio>             // for stderr
 #include <filesystem>         // for std::filesystem(::path)
 #include <fstream>            // for std::ifstream
+#include <print>              // for std::println
 
 #include <cereal/archives/binary.hpp>                     // for BinaryInputArchive
 #include <cereal/types/vector.hpp>                        // IWYU pragma: keep
@@ -61,7 +62,7 @@ cli_args parse_cmd(int argc, char const * argv[])
     }
     catch (sharg::parser_error const & ext)
     {
-        std::cerr << "[COMMAND LINE INPUT ERROR] " << ext.what() << std::endl;
+        std::println(stderr, "[COMMAND LINE INPUT ERROR] {}", ext.what());
         return args;
     }
 

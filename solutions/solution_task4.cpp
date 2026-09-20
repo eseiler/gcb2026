@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2016-2026 Knut Reinert & MPI für molekulare Genetik
 // SPDX-License-Identifier: CC0-1.0
 
-#include <iostream>           // for std::cout
+#include <print>              // for std::println
 
 #include <seqan3/alignment/pairwise/align_pairwise.hpp>
 #include <seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>
@@ -16,7 +16,7 @@ int main(int argc, char const * argv[])
 
     // read in query
     seqan3::sequence_file_input query_file{args.query_path};
-    auto & query = query_file.begin()->sequence();
+    auto & query = (*query_file.begin()).sequence();
 
     for (std::filesystem::path filename : args.filenames)
     {
@@ -39,7 +39,7 @@ int main(int argc, char const * argv[])
             auto result_range = seqan3::align_pairwise(std::tie(record.sequence(), query), config);
             auto & alignment_result = *result_range.begin(); // first and only alignment result
 
-            std::cout << filename << ":" << record.id() << "\tscore:" << alignment_result.score() << std::endl;
+            std::println("{}:{}\tscore:{}", filename.string(), record.id(), alignment_result.score());
         }
     }
 }
