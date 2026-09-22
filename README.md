@@ -199,7 +199,8 @@ Documentation you'll need:
 
 Write the file `task6.cpp` that uses the helper functions in `task6.hpp` for parsing the command line (`parse_cmd`) and loading a hibf (`load`).
 
-After parsing the command line, load the hibf and filenames from disk as you have done in task 3. Then read in the query sequence as you have done in task 4. Hash the query using the `seqan3::views::kmer_hash` with a kmer size of `20`. Query the HIBF as you have done in task 3, this time providing the hashed query and a threshold that reflects that `90%` of the hashes match. Loop over the resulting hits as you have done in task 3 and compute a semi global alignment between each reference file and the query sequence as you have done in task 4.
+Parse the command line with `parse_cmd` from `task6.hpp`.
+Load the HIBF and filenames from disk as you have done in task 3. Then read in the query sequence as you have done in task 4. Hash the query using the `seqan3::views::kmer_hash` with a kmer size of `20`. Query the HIBF as you have done in task 3, this time providing the hashed query and a threshold that reflects that `90%` of the hashes match. Loop over the resulting hits as you have done in task 3 and compute a semi-global alignment between each reference and the query sequence as you have done in task 4.
 
 Documentation you'll need:
 - [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
