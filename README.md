@@ -34,15 +34,6 @@ you exactly which calls to use.
 | [HIBF](https://github.com/seqan/hibf) | The AMQ filter (Hierarchical Interleaved Bloom Filter) itself | — |
 | [cereal](https://uscilab.github.io/cereal/) | Serializing C++ objects to/from a binary file, so you can build an index once and query it later | Python's `pickle` |
 
-A couple of C++ idioms you'll see that may look unfamiliar coming from
-another language:
-* `[&](size_t id, insert_iterator it) { ... }` is a **lambda**, an inline
-  anonymous function. `[&]` means "capture surrounding variables by
-  reference", similar to a Python closure.
-* `sequence | seqan3::views::kmer_hash(seqan3::ungapped{20})` is a
-  **range pipeline**: `sequence` is lazily transformed into a range of
-  k-mer hashes, similar to chaining `.map()`/generator expressions.
-
 ## Repository tour
 
 | Path | What it is |
@@ -97,7 +88,8 @@ total word count across those papers.
 
 If you haven't been coding the scaffold during the workshop with us, copy over `scaffolds/task1_scaffold.cpp` to `src/task1.cpp`.
 
-For each file, check if the **file contains the words** `"3D"`, `"protein"` and `"structure"` and if so add the word count of the file to a total word counter. In the end print out
+Parse the command line with `parse_cmd` from `task1.hpp`.
+For each file in, check if the **file contains the words** `"3D"`, `"protein"` and `"structure"` and if so add the word count of the file to a total word counter. In the end print out
 - the total number of files,
 - the number of files that contained the three query words and
 - the total word count of all files that contained the three query words
@@ -108,16 +100,14 @@ Then run your program:
 ./build/task1 -i data/mock_papers
 ```
 
-Tip: `src/task1.py` implements the exact same logic in Python — useful to
-compare against once your C++ version compiles and runs.
-
 **Need more guidance?** Check out the step by step guide at the end
 
 ## Task 2 — Build an AMQ index over all files
 
-Write the file `task2.cpp` that uses the helper functions in `task2.hpp` for parsing the command line (`parse_cmd`) and storing a hibf (`store`).
+Create the file `task2.cpp` that uses the helper functions in `task2.hpp` for parsing the command line (`parse_cmd`) and storing a hibf (`store`).
 
-Create an HIBF on the same files as before, supplying only required fields to the HIBF config object. The input to the HIBF is a lambda function, that should open a file and hash each word in the file using `std::hash`. In the end, store the index using the `store` function from `task2.hpp` and use the parameter `args.index_path` parsed from the command line as the output filename.
+Parse the command line with `parse_cmd` from `task2.hpp`.
+Create an HIBF on all files. For the HIBF configuration object it enough to supply the required fields. The input to the HIBF is a lambda function, that should open a file and hash each word in the file using `std::hash`. In the end, store the index using the `store` function from `task2.hpp` and use the parameter `args.index_path`.
 
 Documentation you'll need:
 - HIBF lib: https://github.com/seqan/hibf (note the snippet on the landing page)
@@ -130,7 +120,11 @@ Documentation you'll need:
 
 Write the file `task3.cpp` that uses the helper functions in `task3.hpp` for parsing the command line (`parse_cmd`) and loading a hibf (`load`).
 
-Parse the command line with `parse_cmd`. Create an HIBF and filenames object and load them from disk given the `args.index_path` path. Create a vector of three query hashes, that contain the words `"3D"`, `"protein"` and `"structure"` hashed by `std::hash`. Use the HIBF to query these words in the index with an appropriate threshold. Loop over the resulting hits and do the same as in task 1: Open the candidate file, count the words, if all three query words are contained, add the count to the total word counter and output the results in the end.
+Parse the command line with `parse_cmd` from `task3.hpp`.
+Create an HIBF and a filenames object and load them from disk given the `args.index_path` and the `load` function from `task3.hpp`.
+Create a vector of three query hashes, that contains the words `"3D"`, `"protein"` and `"structure"` hashed by `std::hash`.
+Use the HIBF to query these words in the index with an appropriate threshold.
+Loop over the resulting hits and do the same as in task 1: Open the candidate file, count the words, if all three query words are contained, add the count to the total word counter and output the results in the end.
 
 Documentation you'll need:
 - [HIBF lib on GitHub](https://github.com/seqan/hibf) (note the snippet on the landing page)
@@ -171,7 +165,15 @@ builds the AMQ index, task 6 queries it and only aligns the candidates.
 
 ## Task 4 — Baseline: align the query against every reference
 
-In `task4.cpp` using `task4.hpp` helper functions `parse_cmd` you should parse the command line with `parse_cmd` that now has, additionally to the `-i/--input` option, a `-q/--query` option for the input query path. Create `seqan3::sequence_file_input` on the query filepath and store the sequence from the first and only record of the file in a variable `query`. Loop over all files and open each reference file using `seqan3::sequence_file_input` again. Loop over each record in the sequence file (there can be plasmid DNA additional to the genome). For each reference sequence compute a semi global alignment using `seqan3::align_pairwise` with a `seqan3::align_cfg` config object that configures `seqan3::align_cfg::method_global` for a semi global alignment, `seqan3::align_cfg::scoring_scheme` with a `seqan3::nucleotide_scoring_scheme{}` and `seqan3::align_cfg::band_fixed_size` with `seqan3::align_cfg::lower_diagonal{-9000}` and `seqan3::align_cfg::upper_diagonal{500}`. Print the filename, reference name and alignment score for each file to the command line.
+Create the file `task4.cpp` that uses the helper function in `task4.hpp` for parsing the command line (`parse_cmd`).
+
+Parse the command line with `parse_cmd` from `task4.hpp`.
+Read the query from the `args.query_path` using `seqan3::sequence_file_input` and accessing the first record of the file.
+Loop over all files and open each reference file using `seqan3::sequence_file_input` again.
+Loop over each record in the sequence file (there can be plasmid DNA additional to the genome).
+For each reference sequence compute a semi-global alignment using `seqan3::align_pairwise`, with nucleotide scoring scheme and a fixed band size of
+`500` (upper diagonal) and `-9000` (lower diagonal). IMPORTANT: The upper and lower diagonal values are only valid if you pass the reference sequence sequence **first** and the query **second** to the `seqan3::align_pairwise` call.
+Print the filename, reference name and alignment score for each file to the command line.
 
 Documentation you'll need:
 - [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
@@ -181,9 +183,10 @@ Documentation you'll need:
 
 ## Task 5 — Build an AMQ index over reference k-mers
 
-Write the file `task5.cpp` that uses the helper functions in `task5.hpp` for parsing the command line (`parse_cmd`) and storing a hibf (`store`).
+Create the file `task5.cpp` that uses the helper functions in `task5.hpp` for parsing the command line (`parse_cmd`) and storing a hibf (`store`).
 
-Parse the command line as usual. Create a `file_data` lambda function as you have done in task 2 but now open a `seqan3::sequence_file_input` for the current file, loop over the records (of reference sequences) in the file and then loop over each record's `sequence()`, hashed by the `seqan3::views::kmer_hash`. Construct the `seqan3::views::kmer_hash` with a k-mer size of `20` and assign each hash to the iterator `it` of the lambda. Construct and store the hibf as you have done in task 2.
+Parse the command line with `parse_cmd` from `task5.hpp`.
+Create a HIBF input lambda function as you have done in task 2 but now open a `seqan3::sequence_file_input` for the current file, loop over the records (of reference sequences) in the file and then loop over each record's `sequence()`, hashed by the `seqan3::views::kmer_hash`. Construct the `seqan3::views::kmer_hash` with a k-mer size of `20` and assign each hash to the iterator `it` of the lambda. Construct and store the HIBF as you have done in task 2.
 
 Documentation you'll need:
 - [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
