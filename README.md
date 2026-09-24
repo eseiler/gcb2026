@@ -108,6 +108,20 @@ you call them from the repository root with the build directory `build/`:
 The VS Code CMake extension uses `build/<compiler>-<version>-<build type>/` instead;
 adjust the path accordingly.
 
+### Using VS Code
+
+The repository ships a ready-made VS Code configuration in `.vscode.preset/` (CMake
+integration, build task, debugger launch config, formatting). To use it, copy it to
+`.vscode/` from the repository root:
+
+```sh
+cp -r .vscode.preset .vscode
+```
+
+It expects the [CMake Tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools)
+and [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) extensions.
+`.vscode/` is ignored by git, so your local changes stay private.
+
 ### Adding your own task as a build target
 
 Every `.cpp` file in `src/` automatically becomes an executable of the same name

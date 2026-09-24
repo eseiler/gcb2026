@@ -96,14 +96,18 @@
     "files.exclude": {
         ".clang-format": true,
         ".gitignore": true,
+        ".gitattributes": true,
         ".github/**": true,
         "LICENSES/**": true,
         "LICENSE.md": true,
-        ".vscode.preset/": true
+        ".vscode.preset/": true,
+        "data.tar.gz": true,
+        "data.tar.gz.license": true
     },
     "problems.decorations.enabled": false,
     "search.exclude": {
-        "/build/**": true
+        "/build/**": true,
+        "/data/**": true
     },
     "statusbar_command.commands": [
         {
