@@ -37,15 +37,3 @@ CPMGetPackage (sharg) # Argument parser
 
 # Add the application. This will include `src/CMakeLists.txt`.
 add_subdirectory (src)
-
-# `make check` builds every executable defined in `src/CMakeLists.txt`, so you can
-# quickly verify that everything (including the tasks you add) still compiles.
-get_property (gcb2026_src_targets DIRECTORY src PROPERTY BUILDSYSTEM_TARGETS)
-foreach (gcb2026_target IN LISTS gcb2026_src_targets)
-    get_target_property (gcb2026_target_type ${gcb2026_target} TYPE)
-    if (gcb2026_target_type STREQUAL "EXECUTABLE")
-        list (APPEND gcb2026_check_targets ${gcb2026_target})
-    endif ()
-endforeach ()
-add_custom_target (check DEPENDS ${gcb2026_check_targets})
-

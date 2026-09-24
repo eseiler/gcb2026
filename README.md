@@ -86,7 +86,7 @@ cd mock_papers_2
 ```sh
 mkdir build && cd build
 cmake ..
-make task1   # build a single task, once you've added it (see below)
+make task1   # build a single task, once you've created src/task1.cpp (see below)
 ```
 
 Executables land directly in `build/`, so once built you run them as:
@@ -97,16 +97,11 @@ Executables land directly in `build/`, so once built you run them as:
 
 ### Adding your own task as a build target
 
-Each task needs its own line pair in `src/CMakeLists.txt` (**not** the
-top-level `CMakeLists.txt`). Copy the pattern already used for the
-solutions, e.g. for `task1.cpp`:
+Every `.cpp` file in `src/` automatically becomes an executable of the same name
+(`src/task1.cpp` → `task1`); you don't need to edit any `CMakeLists.txt`.
 
-```cmake
-add_executable (task1 task1.cpp)
-target_link_libraries (task1 PRIVATE gcb2026_lib)
-```
-
-Re-run `cmake .` in the build directory once after adding a new executable so CMake picks it up.
+After creating a new file, run `cmake .` once in the build directory so the new target
+exists; `make task1` alone reports `No rule to make target` until then.
 
 ---
 
@@ -287,7 +282,7 @@ compare against once your C++ version compiles and runs.
 
 Building an HIBF on the mock paper data
 
-1. Create `src/task2.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+1. Create `src/task2.cpp` and run `cmake .` in the build directory so the `task2` target is picked up.
 2. Create a `main` function like in task 1.
 3. Include `#include <fstream>`, `#include <print>` and `#include <task2.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task2.hpp` you can see that it now has two options
@@ -316,7 +311,7 @@ Need more help yet? Use the scaffold `scaffolds/task2_scaffold.cpp`.
 
 Querying an HIBF on the mock paper data and counting words
 
-1. Create `src/task3.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+1. Create `src/task3.cpp` and run `cmake .` in the build directory so the `task3` target is picked up.
 2. Create a `main` function like in task 1.
 3. Include `#include <fstream>`, `#include <print>` and `#include <task3.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task3.hpp` you can see that it has the only option `-i/--index` for the index filename.
@@ -333,7 +328,7 @@ Need more help yet? Use the scaffold `scaffolds/task3_scaffold.cpp`.
 
 ## Task 4
 
-1. Create `src/task4.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+1. Create `src/task4.cpp` and run `cmake .` in the build directory so the `task4` target is picked up.
 2. Create a `main` function like in task 1.
 3. Include `#include <print>` and `#include <task4.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task4.hpp` you can see that it now has two options
@@ -365,7 +360,7 @@ Need more help yet? Use the scaffold `scaffolds/task4_scaffold.cpp`.
 
 ## Task 5
 
-1. Create `src/task5.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+1. Create `src/task5.cpp` and run `cmake .` in the build directory so the `task5` target is picked up.
 2. Create a `main` function like in task 1.
 3. Include `#include <print>` and `#include <task5.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task5.hpp` you can see that it now has two options
@@ -389,7 +384,7 @@ Need more help yet? Use the scaffold `scaffolds/task5_scaffold.cpp`.
 
 ## Task 6
 
-1. Create `src/task6.cpp` and add it to the `src/CMakeLists.txt` file as an additional executable.
+1. Create `src/task6.cpp` and run `cmake .` in the build directory so the `task6` target is picked up.
 2. Create a `main` function like in task 1.
 3. Include `#include <print>` and `#include <task6.hpp>`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task6.hpp` you can see that it now has two options
