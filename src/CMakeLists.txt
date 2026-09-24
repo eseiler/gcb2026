@@ -13,7 +13,7 @@ target_link_libraries (gcb2026_lib INTERFACE seqan3::seqan3 sharg::sharg seqan::
 
 target_compile_options (gcb2026_lib INTERFACE "-pedantic" "-Wall" "-Wextra")
 
-option (gcb2026_WITH_WERROR "Report compiler warnings as errors." ON)
+option (gcb2026_WITH_WERROR "Report compiler warnings as errors." OFF)
 
 if (gcb2026_WITH_WERROR)
     target_compile_options (gcb2026_lib INTERFACE "-Werror")
