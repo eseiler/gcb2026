@@ -42,11 +42,11 @@ you exactly which calls to use.
 | `src/` | Put source files here that you will use during this workshop. |
 | `scaffolds/` | If you are inexperienced in C++ use the scaffolds to solve the tasks. |
 | `solutions/` | Don't peek! |
+| `data/` | Input data after unpacking `data.tar.gz` (see below). |
 
 ## Getting the data
 
-The workshop data (`data/mock_papers`, `data/mock_papers_2` and `data/amr`) ships as
-`data.tar.gz`, which is stored with [Git LFS](https://git-lfs.com). You need the Git LFS
+The workshop data ships as `data.tar.gz`, which is stored with [Git LFS](https://git-lfs.com). You need the Git LFS
 extension installed to fetch it; without it, `data.tar.gz` is only a small text pointer file.
 
 ```sh
@@ -60,6 +60,15 @@ Unpack it from the repository root; the archive already contains the `data/` pre
 ```sh
 tar xzf data.tar.gz
 ```
+
+This gives you:
+
+| Path | Content | Used in |
+|---|---|---|
+| `data/mock_papers/` | 5000 text files, 200 of which contain `"3D"`, `"protein"` and `"structure"` | Tasks 1–3 |
+| `data/mock_papers_2/` | 5000 text files, 2500 of which contain the three words | Tasks 1–3 |
+| `data/amr/references/` | 154 bacterial RefSeq genomes (`*.fna.gz`) | Tasks 4–6 |
+| `data/amr/query.fa` | The query sequence (8401 bp) | Tasks 4 and 6 |
 
 <details>
 <summary>How the mock papers were generated</summary>
@@ -89,11 +98,15 @@ cmake ..
 make task1   # build a single task, once you've created src/task1.cpp (see below)
 ```
 
-Executables land directly in `build/`, so once built you run them as:
+Executables land directly in the build directory. All run commands in this README assume
+you call them from the repository root with the build directory `build/`:
 
 ```sh
-./build/task1 -i /path/to/input/dir
+./build/task1 -i data/mock_papers
 ```
+
+The VS Code CMake extension uses `build/<compiler>-<version>-<build type>/` instead;
+adjust the path accordingly.
 
 ### Adding your own task as a build target
 
@@ -122,7 +135,7 @@ total word count across those papers.
 If you haven't been coding the scaffold during the workshop with us, copy over `scaffolds/task1_scaffold.cpp` to `src/task1.cpp`.
 
 Parse the command line with `parse_cmd` from `task1.hpp`.
-For each file in, check if the **file contains the words** `"3D"`, `"protein"` and `"structure"` and if so add the word count of the file to a total word counter. In the end print out
+For each file in the input directory, check if the **file contains the words** `"3D"`, `"protein"` and `"structure"` and if so add the word count of the file to a total word counter. In the end print out
 - the total number of files,
 - the number of files that contained the three query words and
 - the total word count of all files that contained the three query words
@@ -140,7 +153,13 @@ Then run your program:
 Create the file `task2.cpp` that uses the helper functions in `task2.hpp` for parsing the command line (`parse_cmd`) and storing a hibf (`store`).
 
 Parse the command line with `parse_cmd` from `task2.hpp`.
-Create an HIBF on all files. For the HIBF configuration object it enough to supply the required fields. The input to the HIBF is a lambda function, that should open a file and hash each word in the file using `std::hash`. In the end, store the index using the `store` function from `task2.hpp` and use the parameter `args.index_path`.
+Create an HIBF on all files. For the HIBF configuration object it is enough to supply the required fields. The input to the HIBF is a lambda function, that should open a file and hash each word in the file using `std::hash`. In the end, store the index using the `store` function from `task2.hpp` and use the parameter `args.index_path`.
+
+Then run your program:
+
+```
+./build/task2 -i data/mock_papers -o mock_papers.index
+```
 
 Documentation you'll need:
 - HIBF lib: https://github.com/seqan/hibf (note the snippet on the landing page)
@@ -159,6 +178,12 @@ Create a vector of three query hashes, that contains the words `"3D"`, `"protein
 Use the HIBF to query these words in the index with an appropriate threshold.
 Loop over the resulting hits and do the same as in task 1: Open the candidate file, count the words, if all three query words are contained, add the count to the total word counter and output the results in the end.
 
+Then run your program on the index from task 2 (note that `-i` is the index here):
+
+```
+./build/task3 -i mock_papers.index
+```
+
 Documentation you'll need:
 - [HIBF lib on GitHub](https://github.com/seqan/hibf) (note the snippet on the landing page)
 - [HIBF API documentation](https://docs.seqan.de/hibf/main/index.html)
@@ -168,17 +193,17 @@ Documentation you'll need:
 
 ## Benchmarking session 1
 
-Report your timings
+Report your timings, e.g. measured with `time ./build/task1 -i data/mock_papers`.
 
-| Executable | data set      | time (sec) |
-|------------|---------------|------------|
-| task1.cpp  | mock paper    |            |
-| task2.cpp  | mock paper    |            |
-| task3.cpp  | mock paper    |            |
-|    <hr>    |     <hr>      |   <hr>     |
-| task1.cpp  | mock paper 2  |            |
-| task2.cpp  | mock paper 2  |            |
-| task3.cpp  | mock paper 2  |            |
+| Executable | data set              | time (sec) |
+|------------|-----------------------|------------|
+| task1      | `data/mock_papers`    |            |
+| task2      | `data/mock_papers`    |            |
+| task3      | `data/mock_papers`    |            |
+|    <hr>    |     <hr>              |   <hr>     |
+| task1      | `data/mock_papers_2`  |            |
+| task2      | `data/mock_papers_2`  |            |
+| task3      | `data/mock_papers_2`  |            |
 
 ---
 
@@ -205,8 +230,14 @@ Read the query from the `args.query_path` using `seqan3::sequence_file_input` an
 Loop over all files and open each reference file using `seqan3::sequence_file_input` again.
 Loop over each record in the sequence file (there can be plasmid DNA additional to the genome).
 For each reference sequence compute a semi-global alignment using `seqan3::align_pairwise`, with nucleotide scoring scheme and a fixed band size of
-`500` (upper diagonal) and `-9000` (lower diagonal). IMPORTANT: The upper and lower diagonal values are only valid if you pass the reference sequence sequence **first** and the query **second** to the `seqan3::align_pairwise` call.
-Print the filename, reference name and alignment score for each file to the command line.
+`500` (upper diagonal) and `-9000` (lower diagonal). IMPORTANT: The upper and lower diagonal values are only valid if you pass the reference sequence **first** and the query **second** to the `seqan3::align_pairwise` call.
+Print the filename, reference name and alignment score for each record to the command line.
+
+Then run your program:
+
+```
+./build/task4 -i data/amr/references -q data/amr/query.fa
+```
 
 Documentation you'll need:
 - [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
@@ -220,6 +251,12 @@ Create the file `task5.cpp` that uses the helper functions in `task5.hpp` for pa
 
 Parse the command line with `parse_cmd` from `task5.hpp`.
 Create a HIBF input lambda function as you have done in task 2 but now open a `seqan3::sequence_file_input` for the current file, loop over the records (of reference sequences) in the file and then loop over each record's `sequence()`, hashed by the `seqan3::views::kmer_hash`. Construct the `seqan3::views::kmer_hash` with a k-mer size of `20` and assign each hash to the iterator `it` of the lambda. Construct and store the HIBF as you have done in task 2.
+
+Then run your program:
+
+```
+./build/task5 -i data/amr/references -o amr.index
+```
 
 Documentation you'll need:
 - [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
@@ -235,6 +272,12 @@ Write the file `task6.cpp` that uses the helper functions in `task6.hpp` for par
 Parse the command line with `parse_cmd` from `task6.hpp`.
 Load the HIBF and filenames from disk as you have done in task 3. Then read in the query sequence as you have done in task 4. Hash the query using the `seqan3::views::kmer_hash` with a kmer size of `20`. Query the HIBF as you have done in task 3, this time providing the hashed query and a threshold that reflects that `90%` of the hashes match. Loop over the resulting hits as you have done in task 3 and compute a semi-global alignment between each reference and the query sequence as you have done in task 4.
 
+Then run your program on the index from task 5:
+
+```
+./build/task6 -i amr.index -q data/amr/query.fa
+```
+
 Documentation you'll need:
 - [seqan3 sequence file](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html)
 - [seqan3::views::kmer_hash](https://docs.seqan.de/seqan3/main_user/group__search__views.html#ga6e598d6a021868f704d39df73252974f)
@@ -245,13 +288,13 @@ Documentation you'll need:
 
 ## Benchmarking session 2
 
-Report your timings
+Report your timings, e.g. measured with `time ./build/task4 -i data/amr/references -q data/amr/query.fa`.
 
-| Executable | data set      | time (sec) |
-|------------|---------------|------------|
-| task4.cpp  | RefSeq        |            |
-| task5.cpp  | RefSeq        |            |
-| task6.cpp  | RefSeq        |            |
+| Executable | data set               | time (sec) |
+|------------|------------------------|------------|
+| task4      | `data/amr/references`  |            |
+| task5      | `data/amr/references`  |            |
+| task6      | `data/amr/references`  |            |
 
 ---
 
@@ -275,8 +318,6 @@ Then run your program:
 ```
 ./build/task1 -i data/mock_papers
 ```
-Tip: `src/task1.py` implements the exact same logic in Python — useful to
-compare against once your C++ version compiles and runs.
 
 ## Task 2
 
@@ -320,8 +361,8 @@ Querying an HIBF on the mock paper data and counting words
 7. Load hibf index and filenames using the load function `load(hibf, filenames, args.index_path)`.
 8. Construct a `std::vector<uint64_t>` on three input arguments: `"3D"`, `"protein"` and `"structure"` each hashed by `std::hash` just as in task 2. A vector with three elements is for example constructed like this: `std::vector<uint64_t>{1,2,3}`.
 9. Create a hibf agent called `agent` using the member function `membership_agent()` on the `hibf` object. The type of the `agent` variable can be `auto`. Example with `auto`: `auto a = 3`, a is type `int`.
-10. Use the `agent` to query the HIBF by using the member function `agent.membership_for(query, threshold)`, passing the query vector and an appropriate numeric threshold value (e.g. `1` or `1000`). The `result` of the member function is again stored in a variable using `auto`.
-11. The result is a vector of numeric values indicating the file indices of files that likely contain the three query words. Loop over the `result` vector with a for loop `for (file_idx : result)`.
+10. Use the `agent` to query the HIBF by using the member function `agent.membership_for(query, threshold)`, passing the query vector and an appropriate numeric threshold value (e.g. `3`). The `result` of the member function is again stored in a variable using `auto`.
+11. The result is a vector of numeric values indicating the file indices of files that likely contain the three query words. Loop over the `result` vector with a for loop `for (auto file_idx : result)`.
 12. Now you need to do the exact same analysis as you have done in task 1 for the candidate files. Follow the steps 1-8 of task 1 again or copy over the code and adapt it to this for loop.
 
 Need more help yet? Use the scaffold `scaffolds/task3_scaffold.cpp`.
@@ -334,7 +375,7 @@ Need more help yet? Use the scaffold `scaffolds/task3_scaffold.cpp`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task4.hpp` you can see that it now has two options
    - `-i/--input` for the input directory
    - `-q/--query` for the query filename
-5. Include `<seqan3/io/sequence_file/input.hpp>`.
+5. Include `<seqan3/io/sequence_file/input.hpp>`, `<seqan3/alignment/pairwise/align_pairwise.hpp>` and `<seqan3/alignment/scoring/nucleotide_scoring_scheme.hpp>`.
 6. Construct a `seqan3::sequence_file_input` file named `query_file` given the query path `args.query_path`. ([`sequence_file_input` docs](https://docs.seqan.de/seqan3/main_user/classseqan3_1_1sequence__file__input.html))
 7. Retrieve the query sequence of the first and only record like this: `auto & query = (*query_file.begin()).sequence()`. Explanation: `query_file.begin()` gives an iterator to the query_file range. `*` dereferences the iterator, giving you the first record, and `sequence()` gives you the sequence of the record.
 8. Loop over the filenames in `args.filenames` as you have done in task 1.
@@ -366,7 +407,7 @@ Need more help yet? Use the scaffold `scaffolds/task4_scaffold.cpp`.
 4. Parse the command line just as in task 1 (using `parse_cmd`). If you take a look in `task5.hpp` you can see that it now has two options
    - `-i/--input` for the input directory
    - `-o/--output-index` for the index filename
-5. Include `<seqan3/io/sequence_file/input.hpp>`.
+5. Include `<seqan3/io/sequence_file/input.hpp>` and `<seqan3/search/views/kmer_hash.hpp>`.
 6. Copy over this lambda signature
    ```c++
    auto file_data = [&](size_t const file_idx, seqan::hibf::insert_iterator it)
@@ -391,7 +432,7 @@ Need more help yet? Use the scaffold `scaffolds/task5_scaffold.cpp`.
    - `-i/--index` for the index filename
    - `-q/--query` for the query filename
 5. Follow task 3 steps 5-7 to load the `hibf` index and `filenames`.
-6. Follow task 4 steps 5-7 to read the `query` sequence from file.
+6. Follow task 4 steps 5-7 to read the `query` sequence from file. Also add the alignment includes from task 4 step 5 and `#include <seqan3/search/views/kmer_hash.hpp>`.
 7. Create a `query_hashes` range of type `auto` by piping (`|`) the `seqan3::views::kmer_hash` onto the `query` sequence. Construct the `kmer_hash` with a `seqan3::ungapped` shape initialised to a size of `20`.
 8. Query the HIBF and loop over the result by following task 3 steps 9-11.
 9. Compute a semi-global alignment for each reference sequence by following task 4 steps 9-14.
