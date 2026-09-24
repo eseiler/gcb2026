@@ -32,21 +32,12 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     endif ()
 endif ()
 
-# Add the application.
-add_executable (solution_task1 solution_task1.cpp)
-target_link_libraries (solution_task1 PRIVATE gcb2026_lib)
+# Add one executable per `.cpp` file in this directory, named after the file (e.g. `task1.cpp` -> `task1`).
+# CONFIGURE_DEPENDS makes the build re-run CMake when files are added or removed.
+file (GLOB gcb2026_sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
-add_executable (solution_task2 solution_task2.cpp)
-target_link_libraries (solution_task2 PRIVATE gcb2026_lib)
-
-add_executable (solution_task3 solution_task3.cpp)
-target_link_libraries (solution_task3 PRIVATE gcb2026_lib)
-
-add_executable (solution_task4 solution_task4.cpp)
-target_link_libraries (solution_task4 PRIVATE gcb2026_lib)
-
-add_executable (solution_task5 solution_task5.cpp)
-target_link_libraries (solution_task5 PRIVATE gcb2026_lib)
-
-add_executable (solution_task6 solution_task6.cpp)
-target_link_libraries (solution_task6 PRIVATE gcb2026_lib)
+foreach (gcb2026_source IN LISTS gcb2026_sources)
+    get_filename_component (gcb2026_target "${gcb2026_source}" NAME_WE)
+    add_executable (${gcb2026_target} "${gcb2026_source}")
+    target_link_libraries (${gcb2026_target} PRIVATE gcb2026_lib)
+endforeach ()
