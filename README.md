@@ -43,6 +43,44 @@ you exactly which calls to use.
 | `scaffolds/` | If you are inexperienced in C++ use the scaffolds to solve the tasks. |
 | `solutions/` | Don't peek! |
 
+## Getting the data
+
+The workshop data (`data/mock_papers`, `data/mock_papers_2` and `data/amr`) ships as
+`data.tar.gz`, which is stored with [Git LFS](https://git-lfs.com). You need the Git LFS
+extension installed to fetch it; without it, `data.tar.gz` is only a small text pointer file.
+
+```sh
+# Install Git LFS once, e.g. `brew install git-lfs` or `sudo apt install git-lfs`
+git lfs install
+git lfs pull          # only needed if you cloned before installing Git LFS
+```
+
+Unpack it from the repository root; the archive already contains the `data/` prefix:
+
+```sh
+tar xzf data.tar.gz
+```
+
+<details>
+<summary>How the mock papers were generated</summary>
+
+`data/generate_mock_papers.sh <file_word_count> <num_no_hit_files> <num_hits>` writes random
+text files to the current directory. "Hit" files (`P*.txt`) additionally contain the words
+`"3D"`, `"protein"` and `"structure"`.
+
+```sh
+cd data
+mkdir mock_papers
+cd mock_papers
+../generate_mock_papers.sh 10000 4800 200
+cd ..
+mkdir mock_papers_2
+cd mock_papers_2
+../generate_mock_papers.sh 10000 2500 2500
+```
+
+</details>
+
 ## Build & run
 
 ```sh

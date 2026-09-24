@@ -37,5 +37,5 @@
 
 /build/
 /.vscode/
-/data/amr/
-/data/mock_papers
+/data/*
+!/data/generate_mock_papers.sh
