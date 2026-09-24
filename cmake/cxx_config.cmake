@@ -23,3 +23,13 @@ check_ipo_supported (RESULT result
 if (result)
     set (CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif ()
+
+# Default to a Release build if no build type was given (single-config generators only).
+get_property (gcb2026_is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if (NOT gcb2026_is_multi_config AND NOT CMAKE_BUILD_TYPE)
+    set (CMAKE_BUILD_TYPE
+         Release
+         CACHE STRING "Choose the type of build." FORCE
+    )
+    set_property (CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)
+endif ()
